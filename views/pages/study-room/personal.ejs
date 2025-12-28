@@ -1,0 +1,112 @@
+<div class="fixed-background"></div>
+
+<section class="study-room">
+  <div class="study-room__container">
+    <div class="study-room__header">
+      <div>
+        <h1 class="study-room__title magical-title">Kişisel Çalışma Odası</h1>
+        <p class="study-room__subtitle magical-subtitle">
+          Study with me + pomodoro + ortam seçimi.
+        </p>
+      </div>
+    </div>
+
+    <div class="study-room__grid">
+      <!-- SOL: YouTube -->
+      <div class="study-room__card">
+        <h2>Study With Me</h2>
+
+        <div class="study-room__row">
+          <input id="ytUrl" class="study-room__input" type="text"
+            placeholder="YouTube linkini yapıştır (örn: https://www.youtube.com/watch?v=...)" autocomplete="off" />
+        </div>
+
+        <p class="study-room__hint" id="ytStatus"></p>
+
+        <div class="study-room__player">
+          <iframe id="ytPlayer" src="https://www.youtube.com/embed/jfKfPfyJRdk" title="Study With Me"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <!-- SAĞ: Pomodoro -->
+      <div class="study-room__card">
+        <h2>Odak Modu</h2>
+
+        <div class="pomodoro__time" id="pomoTime">25:00</div>
+
+        <div class="pomodoro__controls">
+          <button class="btn-primary" type="button" id="pomoStart">
+            Başlat
+          </button>
+          <button class="btn-secondary" type="button" id="pomoPause">
+            Durdur
+          </button>
+          <button class="btn-secondary" type="button" id="pomoReset">
+            Sıfırla
+          </button>
+        </div>
+
+        <!-- MODLAR -->
+        <div class="pomodoro__modes">
+          <!-- Odak presetleri -->
+          <button type="button" class="badge is-active" id="modeWork" data-mode="work" data-minutes="25">
+            🍅 Odak: 25 dk
+          </button>
+          <button type="button" class="badge" data-mode="work" data-minutes="50">
+            🔥 Odak: 50 dk
+          </button>
+          <button type="button" class="badge" data-mode="work" data-minutes="90">
+            🧠 Odak: 90 dk
+          </button>
+
+          <!-- Molalar -->
+          <button type="button" class="badge" id="modeShort" data-mode="short" data-minutes="5">
+            ☕ Kısa mola: 5 dk
+          </button>
+          <button type="button" class="badge" data-mode="short" data-minutes="10">
+            ☕ Kısa mola: 10 dk
+          </button>
+
+          <button type="button" class="badge" id="modeLong" data-mode="long" data-minutes="15">
+            🌙 Uzun mola: 15 dk
+          </button>
+          <button type="button" class="badge" data-mode="long" data-minutes="25">
+            🌙 Uzun mola: 25 dk
+          </button>
+        </div>
+
+        <!-- ÖZEL SÜRE -->
+        <div class="study-room__row" style="margin-top: 12px">
+          <input id="customMinutes" class="study-room__input" type="number" min="1" max="180"
+            placeholder="Özel süre (dk) örn: 45" style="max-width: 240px" />
+          <button id="applyCustom" class="btn-secondary" type="button">
+            Uygula
+          </button>
+        </div>
+
+        <p class="study-room__hint" id="pomoPlannedHint">
+          Planlanan süre: <strong id="pomoPlanned">25</strong> dk
+        </p>
+
+        <p class="study-room__hint" id="pomoStatus">
+          Hazır. Başlatınca odak başlar.
+        </p>
+
+        <a class="study-room__hint" href="/study-room/log">
+          📜 Bugünkü pomodoroları gör
+        </a>
+      </div>
+    </div>
+
+    <!-- CSRF Token for JavaScript -->
+    <script>
+      window.MINDSHIRE_CSRF_TOKEN = "<%= csrfToken %>";
+    </script>
+
+    <!-- Scripts -->
+    <script src="/js/study-room.js"></script>
+    <script src="/js/pomodoro.js"></script>
+  </div>
+</section>

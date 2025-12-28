@@ -1,0 +1,183 @@
+<div class="fixed-background"></div>
+
+<section class="study-room">
+  <div class="study-room__container">
+    <div class="study-room__header">
+      <div>
+        <h1 class="study-room__title magical-title">Topluluk Çalışma Odaları</h1>
+        <p class="study-room__subtitle magical-subtitle">
+          Aktif odaları keşfet veya kendi odanı kur.
+        </p>
+      </div>
+    </div>
+
+    <div class="community-topbar">
+      <span class="badge">
+        👀 Toplam ziyaret: <strong>
+          <%= totalVisits || 0 %>
+        </strong>
+      </span>
+      <span class="badge">
+        🟢 Aktif oda: <strong>
+          <%= (rooms || []).length %>
+        </strong>
+      </span>
+      <span class="badge">✨ Online/ikonlar Socket ile canlı olacak</span>
+    </div>
+
+    <div class="study-room__card" style="margin-top: 14px">
+      <h2>Oda Kur</h2>
+
+      <form method="POST" action="/study-room/community/create">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="study-room__row">
+          <input class="study-room__input" name="title" placeholder="Oda adı (örn: Numerik kampı)" required />
+        </div>
+
+        <!-- ============ TEMA GALERİSİ (KAYDIRMALI) ============ -->
+        <div class="study-room__card" style="margin-top: 12px">
+          <h3 style="margin: 0 0 10px 0">🎨 Tema Seç</h3>
+          <p class="study-room__hint" style="margin-top: 0">
+            Kaydır ve seç. Odanın arka planı buna göre ayarlanacak.
+          </p>
+
+          <!-- form'a gidecek gerçek değerler -->
+          <input type="hidden" name="themeKey" id="themeKey" value="bg1" />
+          <input type="hidden" name="themeLabel" id="themeLabel" value="Gece Kütüphanesi" />
+
+          <div class="theme-carousel">
+            <button type="button" class="theme-nav theme-nav--left" aria-label="Sola kaydır">
+              ‹
+            </button>
+
+            <div class="theme-track" id="themeTrack">
+              <button type="button" class="theme-slide is-selected" data-key="bg1" data-label="Gece Kütüphanesi"
+                data-img="/img/studybg/bg1.png">
+                <span class="theme-img" style="background-image: url('/img/studybg/bg1.png')"></span>
+                <span class="theme-caption">
+                  <span class="theme-title">Gece Kütüphanesi</span>
+                </span>
+              </button>
+
+              <button type="button" class="theme-slide" data-key="bg2" data-label="Sisli Orman"
+                data-img="/img/studybg/bg2.png">
+                <span class="theme-img" style="background-image: url('/img/studybg/bg2.png')"></span>
+                <span class="theme-caption"><span class="theme-title">Sisli Orman</span></span>
+              </button>
+
+              <button type="button" class="theme-slide" data-key="bg3" data-label="Yıldız Odası"
+                data-img="/img/studybg/bg3.png">
+                <span class="theme-img" style="background-image: url('/img/studybg/bg3.png')"></span>
+                <span class="theme-caption"><span class="theme-title">Yıldız Odası</span></span>
+              </button>
+
+              <button type="button" class="theme-slide" data-key="bg4" data-label="Loş Çalışma"
+                data-img="/img/studybg/bg4.png">
+                <span class="theme-img" style="background-image: url('/img/studybg/bg4.png')"></span>
+                <span class="theme-caption"><span class="theme-title">Loş Çalışma</span></span>
+              </button>
+
+              <button type="button" class="theme-slide" data-key="bg5" data-label="Kış Akşamı"
+                data-img="/img/studybg/bg5.png">
+                <span class="theme-img" style="background-image: url('/img/studybg/bg5.png')"></span>
+                <span class="theme-caption"><span class="theme-title">Kış Akşamı</span></span>
+              </button>
+
+              <button type="button" class="theme-slide" data-key="bg6" data-label="Aurora"
+                data-img="/img/studybg/bg6.png">
+                <span class="theme-img" style="background-image: url('/img/studybg/bg6.png')"></span>
+                <span class="theme-caption"><span class="theme-title">Aurora</span></span>
+              </button>
+            </div>
+
+            <button type="button" class="theme-nav theme-nav--right" aria-label="Sağa kaydır">
+              ›
+            </button>
+          </div>
+
+          <div class="study-room__hint" style="margin-top: 10px">
+            Seçilen tema:
+            <strong id="themePickedLabel">Gece Kütüphanesi</strong>
+          </div>
+        </div>
+
+        <script src="/js/theme-gallery.js"></script>
+        <!-- ======================================= -->
+
+        <div class="study-room__row" style="margin-top: 10px">
+          <input class="study-room__input" type="number" name="focusMinutes" min="5" max="180" value="25"
+            placeholder="Odak (dk)" />
+          <input class="study-room__input" type="number" name="sessionsCount" min="1" max="24" value="4"
+            placeholder="Oturum sayısı" />
+        </div>
+
+        <div class="study-room__row" style="margin-top: 10px">
+          <input class="study-room__input" type="number" name="shortBreakMinutes" min="1" max="60" value="5"
+            placeholder="Kısa mola (dk)" />
+          <input class="study-room__input" type="number" name="longBreakMinutes" min="1" max="120" value="15"
+            placeholder="Uzun mola (dk)" />
+        </div>
+
+        <div class="study-room__row" style="margin-top: 10px">
+          <label class="badge" style="cursor: pointer">
+            <input type="checkbox" name="isLocked" style="margin-right: 8px" />
+            Kilitli oda
+          </label>
+
+          <input class="study-room__input" name="accessCode" placeholder="Erişim kodu (opsiyonel)" />
+
+          <button class="btn-primary" type="submit">Odayı Kur</button>
+        </div>
+
+        <p class="study-room__hint">
+          Tema seçimi artık görselden yapılıyor. (themeKey/themeLabel hidden
+          gidiyor)
+        </p>
+      </form>
+
+      <script src="/js/theme-gallery.js"></script>
+    </div>
+
+    <div class="study-room__card" style="margin-top: 18px">
+      <h2>Aktif Odalar</h2>
+
+      <% if (!rooms || rooms.length===0) { %>
+        <p class="study-room__hint">
+          Şu an aktif oda yok. İlk büyüyü sen başlat ✨
+        </p>
+        <% } else { %>
+          <div class="log-list">
+            <% rooms.forEach((r)=> { %>
+              <div class="log-item">
+                <div>
+                  <div class="log-item__title">
+                    <strong>
+                      <%= r.title %>
+                    </strong>
+                    <span class="badge">🎨 <%= r.themeLabel %></span>
+                    <span class="badge">
+                      🍅 <%= r.focusMinutes %> dk x <%= r.sessionsCount %>
+                    </span>
+                    <% if (r.isLocked) { %>
+                      <span class="badge">🔒 Kilitli</span>
+                      <% } %>
+                  </div>
+
+                  <div class="log-item__meta">
+                    <span class="muted">Ziyaret: <%= r.totalVisits || 0 %></span>
+                    <span class="muted">Giriş: <%= r.totalJoins || 0 %></span>
+                  </div>
+                </div>
+
+                <div class="log-item__right">
+                  <a class="btn-secondary" href="/study-room/community/<%= r._id %>">
+                    Odaya Gir
+                  </a>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+          <% } %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,314 @@
+<div class="fixed-background"></div>
+
+<main class="courses-page">
+  <header class="courses-header">
+    <div>
+      <h1 class="courses-title">Dersler</h1>
+      <p class="courses-subtitle">
+        Kendi ders kitabını yaz: derslerini ve konularını ekle, tamamla, güçlen
+        ✨
+      </p>
+    </div>
+
+    <div class="courses-actions">
+      <button class="btn-primary" id="openCourseModal">+ Ders ekle</button>
+      <% if (selectedCourse) { %>
+        <button class="btn-secondary" id="openTopicModal">+ Konu ekle</button>
+        <% } %>
+    </div>
+  </header>
+
+  <section class="courses-layout">
+    <!-- SOL: Ders listesi -->
+    <aside class="courses-sidebar">
+      <div class="panel-header">
+        <h2>Ders Kitaplığın</h2>
+        <span class="panel-note">Ders seç → konuları yönet</span>
+      </div>
+
+      <% if (courses && courses.length) { %>
+        <div class="course-list">
+          <% courses.forEach(c=> { %>
+            <a class="course-item <%= selectedCourse && String(selectedCourse._id) === String(c._id) ? 'is-active' : '' %>"
+              href="/courses/<%= c.slug || c._id %>" style="--course-color: <%= (c.color || '#ffdb58') %>">
+              <div class="course-dot"></div>
+              <div class="course-text">
+                <div class="course-name">
+                  <%= c.name %>
+                </div>
+                <div class="course-meta">
+                  <%= c.code ? c.code : '—' %>
+                    <span class="sep">·</span>
+                    <%= c.term ? c.term : 'Dönem yok' %>
+                </div>
+              </div>
+              <div class="course-count">
+                <%= (c.topicsCount || (c.topics || []).length || 0) %>
+              </div>
+            </a>
+            <% }) %>
+        </div>
+        <% } else { %>
+          <p class="empty-note">Henüz ders yok. İlk dersini ekle ✨</p>
+          <% } %>
+    </aside>
+
+    <!-- SAĞ: Seçili ders -->
+    <section class="courses-main">
+      <% if (!selectedCourse) { %>
+        <div class="empty-state">
+          <h2>Burada büyü yok… şimdilik.</h2>
+          <p>
+            Bir ders ekleyerek başlayalım. Sonra dersin konularını parşömen
+            parşömen eklersin.
+          </p>
+          <button class="btn-primary" id="openCourseModal2">
+            + İlk dersini ekle
+          </button>
+        </div>
+        <% } else { %>
+          <div class="course-hero" style="--course-color: <%= (selectedCourse.color || '#ffdb58') %>">
+            <div class="course-hero-left">
+              <div class="course-hero-badge">Seçili ders</div>
+              <h2 class="course-hero-title">
+                <%= selectedCourse.name %>
+              </h2>
+              <div class="course-hero-meta">
+                <span>
+                  <%= selectedCourse.code ? selectedCourse.code : 'Kod yok' %>
+                </span>
+                <span class="sep">·</span>
+                <span>
+                  <%= selectedCourse.instructor ? selectedCourse.instructor : 'Hoca yok' %>
+                </span>
+                <span class="sep">·</span>
+                <span>
+                  <%= selectedCourse.term ? selectedCourse.term : 'Dönem yok' %>
+                </span>
+              </div>
+            </div>
+
+            <div class="course-hero-actions">
+              <button class="btn-secondary" id="editCourseBtn" type="button" data-course-id="<%= selectedCourse._id %>">
+                Düzenle
+              </button>
+
+              <form action="/courses/<%= selectedCourse._id %>?_method=DELETE" method="POST" style="display: inline">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button class="btn-secondary danger" type="submit"
+                  onclick="return confirm('Bu dersi ve tüm konularını silmek istiyor musun?')">
+                  Sil
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Konular -->
+          <div class="topics-grid">
+            <!-- Yapılacaklar -->
+            <div class="topics-panel">
+              <div class="panel-header">
+                <h2>Yapılacak Konular</h2>
+                <span class="panel-note">Bugün 1 konu bile efsane ilerleme</span>
+              </div>
+
+              <% if (selectedTopics && selectedTopics.pending && selectedTopics.pending.length) { %>
+                <div class="topic-list">
+                  <% selectedTopics.pending.forEach(t=> { %>
+                    <article class="topic-card">
+                      <div class="topic-left">
+                        <span class="topic-check"></span>
+                        <div class="topic-text">
+                          <div class="topic-title">
+                            <%= t.title %>
+                          </div>
+                          <div class="topic-meta">
+                            <%= t.plannedMinutes || 30 %> dk ·
+                              <span class="muted">not: <%= t.notes ? t.notes : '—' %></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="topic-actions">
+                        <form action="/courses/<%= selectedCourse._id %>/topics/<%= t._id %>/toggle" method="POST"
+                          style="display: inline">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                          <button class="btn-mini" type="submit">Tamamla</button>
+                        </form>
+
+                        <button class="btn-mini ghost editTopicBtn" type="button"
+                          data-course-id="<%= selectedCourse._id %>" data-topic-id="<%= t._id %>">
+                          Düzenle
+                        </button>
+
+                        <form action="/courses/<%= selectedCourse._id %>/topics/<%= t._id %>?_method=DELETE"
+                          method="POST" style="display: inline">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                          <button class="btn-mini ghost danger" type="submit"
+                            onclick="return confirm('Bu konuyu silmek istiyor musun?')">
+                            Sil
+                          </button>
+                        </form>
+                      </div>
+                    </article>
+                    <% }) %>
+                </div>
+                <% } else { %>
+                  <p class="empty-note">Yapılacak konu yok. Yeni konu ekle ✨</p>
+                  <% } %>
+            </div>
+
+            <!-- Tamamlananlar -->
+            <div class="topics-panel">
+              <div class="panel-header">
+                <h2>Tamamlananlar</h2>
+                <span class="panel-note">Bitirdikçe gücün artıyor</span>
+              </div>
+
+              <% if (selectedTopics && selectedTopics.done && selectedTopics.done.length) { %>
+                <div class="topic-list">
+                  <% selectedTopics.done.forEach(t=> { %>
+                    <article class="topic-card is-completed">
+                      <div class="topic-left">
+                        <span class="topic-check"></span>
+                        <div class="topic-text">
+                          <div class="topic-title">
+                            <%= t.title %>
+                          </div>
+                          <div class="topic-meta">
+                            <%= t.plannedMinutes || 30 %> dk ·
+                              <span class="muted">not: <%= t.notes ? t.notes : '—' %></span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="topic-actions">
+                        <form action="/courses/<%= selectedCourse._id %>/topics/<%= t._id %>/toggle" method="POST"
+                          style="display: inline">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                          <button class="btn-mini ghost" type="submit">Geri al</button>
+                        </form>
+
+                        <button class="btn-mini ghost editTopicBtn" type="button"
+                          data-course-id="<%= selectedCourse._id %>" data-topic-id="<%= t._id %>">
+                          Düzenle
+                        </button>
+
+                        <form action="/courses/<%= selectedCourse._id %>/topics/<%= t._id %>?_method=DELETE"
+                          method="POST" style="display: inline">
+                          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                          <button class="btn-mini ghost danger" type="submit"
+                            onclick="return confirm('Bu konuyu silmek istiyor musun?')">
+                            Sil
+                          </button>
+                        </form>
+                      </div>
+                    </article>
+                    <% }) %>
+                </div>
+                <% } else { %>
+                  <p class="empty-note">Henüz tamamlanan yok. İlk konu senin! ⚡</p>
+                  <% } %>
+            </div>
+          </div>
+          <% } %>
+    </section>
+  </section>
+</main>
+
+<!-- === Ders Modal (Create/Edit) === -->
+<div class="task-modal-backdrop" id="courseModal">
+  <div class="task-modal">
+    <h2 id="courseModalTitle">Ders Ekle</h2>
+
+    <form id="courseForm" action="/courses" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" id="courseMethod" name="_method" value="POST" />
+
+      <label>
+        Ders adı
+        <input type="text" id="courseName" name="name" placeholder="Örn: Veri Yapıları" required />
+      </label>
+
+      <div class="modal-row">
+        <label>
+          Kod (opsiyonel)
+          <input type="text" id="courseCode" name="code" placeholder="Örn: SWE302" />
+        </label>
+        <label>
+          Dönem (opsiyonel)
+          <input type="text" id="courseTerm" name="term" placeholder="Örn: 2025 Güz" />
+        </label>
+      </div>
+
+      <label>
+        Hoca (opsiyonel)
+        <input type="text" id="courseInstructor" name="instructor" placeholder="Örn: Rüstem Kara" />
+      </label>
+
+      <label>
+        Renk
+        <input type="color" id="courseColor" name="color" value="#ffdb58" />
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="closeCourseModal">
+          Vazgeç
+        </button>
+        <button type="submit" class="btn-primary" id="courseSubmitBtn">
+          Kaydet
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- === Konu Modal (Create/Edit) === -->
+<div class="task-modal-backdrop" id="topicModal">
+  <div class="task-modal">
+    <h2 id="topicModalTitle">Konu Ekle</h2>
+
+    <% if (selectedCourse) { %>
+      <form id="topicForm" action="/courses/<%= selectedCourse._id %>/topics" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" id="topicMethod" name="_method" value="POST" />
+
+        <label>
+          Konu başlığı
+          <input type="text" id="topicTitle" name="title" placeholder="Örn: Linked List" required />
+        </label>
+
+        <div class="modal-row">
+          <label>
+            Plan (dk)
+            <input type="number" id="topicPlannedMinutes" name="plannedMinutes" min="5" step="5" value="30" />
+          </label>
+          <label>
+            Not (opsiyonel)
+            <input type="text" id="topicNotes" name="notes" placeholder="Örn: 3 soru çöz" />
+          </label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" id="closeTopicModal">
+            Vazgeç
+          </button>
+          <button type="submit" class="btn-primary" id="topicSubmitBtn">
+            Kaydet
+          </button>
+        </div>
+      </form>
+      <% } else { %>
+        <p class="empty-note">Önce bir ders seçmelisin.</p>
+        <% } %>
+  </div>
+</div>
+
+<!-- ✅ Güvenli JSON: attribute değil, script içinde -->
+<script>
+  window.__COURSES__ = <% - JSON.stringify(courses || []) %>;
+  window.__SELECTED_COURSE__ = <% - JSON.stringify(selectedCourse || null) %>;
+  window.__SELECTED_TOPICS__ = <% - JSON.stringify(selectedTopics || { pending: [], done: [] }) %>;
+</script>
+
+<script src="/js/courses.js"></script>

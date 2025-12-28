@@ -1,0 +1,43 @@
+/* public/css/style.css */
+
+/* ================================
+   1. Global / Ortak Stiller
+   ================================ */
+
+@import url('./base.css');
+@import url('./buttons.css');
+@import url('./forms.css');
+@import url('./header.css');
+@import url('./footer.css');
+@import url('./responsive.css');
+
+/* ================================
+   2. Sayfa Bazli Stiller
+   ================================ */
+
+/* Giris oncesi karsilama (ana landing) */
+@import url('./pages/welcome.css');
+
+/* Kayit / Giris (auth) sayfalari */
+@import url('./pages/auth.css');
+
+/* Kesfet sayfasi */
+@import url('./pages/discover.css');
+
+/* Dashboard / giris sonrasi ana ekran + header */
+@import url('./pages/dashboard.css');
+
+/* Yapilacaklar listesi sayfasi */
+@import url('./pages/todo.css');
+
+/* Takvim sayfasi */
+@import url('./pages/calendar.css');
+
+/*Dersler sayfasi */
+@import url('./pages/courses.css');
+
+/* Calisma odasi sayfasi */
+@import url('./pages/study-room.css');
+
+/* Istatistik sayfalari */
+@import url('./pages/stats.css');

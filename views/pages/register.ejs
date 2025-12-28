@@ -1,0 +1,135 @@
+<div class="welcome-hero">
+  <div class="welcome-content register-container">
+    <header class="register-header">
+      <h1 class="magical-title">Akademiye Kayıt</h1>
+      <p class="magical-subtitle">Kaderini seç ve parşömene adını yazdır.</p>
+
+      <div class="login-redirect-top">
+        <p>Zaten bir büyücü müsün? <a href="/giris">Giriş Yap</a></p>
+      </div>
+    </header>
+
+    <form action="/kayit" method="POST" class="magic-form" id="registerForm">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="input-section">
+        <div class="form-group magic-field">
+          <span class="input-icon">🧙‍♂️</span>
+          <input type="text" name="username" placeholder=" " required class="magic-input" id="inp-name" />
+          <label for="inp-name" class="magic-label">Büyücü Adı</label>
+        </div>
+
+        <div class="form-group magic-field">
+          <span class="input-icon">📧</span>
+          <input type="email" name="email" placeholder=" " required class="magic-input" id="inp-email" />
+          <label for="inp-email" class="magic-label">E-Posta Adresi</label>
+        </div>
+
+        <div class="form-group magic-field full-row" style="position: relative">
+          <span class="input-icon">🔒</span>
+          <input type="password" name="password" placeholder=" " required class="magic-input" id="inp-pass"
+            minlength="8" title="En az 8 karakter olmalıdır." />
+          <label for="inp-pass" class="magic-label">Gizli Şifre</label>
+          <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+      </div>
+
+      <div class="avatar-section">
+        <p class="avatar-main-label">Ruhunu Yansıtan Simgeyi Seç:</p>
+        <p style="
+            text-align: center;
+            color: #aaa;
+            font-size: 0.8rem;
+            margin-top: -10px;
+            margin-bottom: 15px;
+          ">
+          (Seçmezsen gizemli bir suret atanır)
+        </p>
+
+        <div class="avatar-scroll-box">
+          <div class="avatar-category">
+            <h4>🔮 Kadim Büyücüler</h4>
+            <div class="avatars-grid">
+              <% for(let i=1; i<=6; i++) { %>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="/img/avatars/buyu/buyu<%= i %>.jpg" class="avatar-radio" />
+                  <img src="/img/avatars/buyu/buyu<%= i %>.jpg" alt="Büyücü <%= i %>" />
+                  <div class="glow-ring"></div>
+                </label>
+                <% } %>
+            </div>
+          </div>
+
+          <div class="avatar-category">
+            <h4>🌿 Orman Elfleri</h4>
+            <div class="avatars-grid">
+              <% for(let i=1; i<=6; i++) { %>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="/img/avatars/elf/elf<%= i %>.jpg" class="avatar-radio" />
+                  <img src="/img/avatars/elf/elf<%= i %>.jpg" alt="Elf <%= i %>" />
+                  <div class="glow-ring"></div>
+                </label>
+                <% } %>
+            </div>
+          </div>
+
+          <div class="avatar-category">
+            <h4>✨ Işık Perileri</h4>
+            <div class="avatars-grid">
+              <% for(let i=1; i<=6; i++) { %>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="/img/avatars/peri/peri<%= i %>.jpg" class="avatar-radio" />
+                  <img src="/img/avatars/peri/peri<%= i %>.jpg" alt="Peri <%= i %>" />
+                  <div class="glow-ring"></div>
+                </label>
+                <% } %>
+            </div>
+          </div>
+
+          <div class="avatar-category">
+            <h4>🔥 Efsanevi Varlıklar</h4>
+            <div class="avatars-grid">
+              <% for(let i=1; i<=6; i++) { %>
+                <label class="avatar-option">
+                  <input type="radio" name="avatar" value="/img/avatars/fark/fark<%= i %>.jpg" class="avatar-radio" />
+                  <img src="/img/avatars/fark/fark<%= i %>.jpg" alt="Yaratık <%= i %>" />
+                  <div class="glow-ring"></div>
+                </label>
+                <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-magic btn-register full-width">
+        <span class="icon">📜</span> Mühürle ve Kaydol
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function togglePassword() {
+    const input = document.getElementById("inp-pass");
+    const icon = document.querySelector(".toggle-password");
+    if (input.type === "password") {
+      input.type = "text";
+      icon.textContent = "🙈";
+    } else {
+      input.type = "password";
+      icon.textContent = "👁️";
+    }
+  }
+
+  const radios = document.querySelectorAll(".avatar-radio");
+  let lastChecked = null;
+  radios.forEach((radio) => {
+    radio.addEventListener("click", function () {
+      if (lastChecked === this) {
+        this.checked = false;
+        lastChecked = null;
+      } else {
+        lastChecked = this;
+      }
+    });
+  });
+</script>

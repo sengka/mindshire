@@ -1,0 +1,233 @@
+<div class="fixed-background"></div>
+
+<main class="todo-page">
+  <header class="todo-header">
+    <div>
+      <h1 class="todo-title">Görev Kütüphanen</h1>
+      <p class="todo-subtitle">
+        Bugün hangi parşömenleri tamamlayıp XP toplayacağız?
+      </p>
+    </div>
+
+    <button class="btn-primary" id="openTaskModal">+ Yeni görev ekle</button>
+  </header>
+
+  <section class="todo-layout">
+    <!-- SOL: Bugünkü Görevler -->
+    <div class="todo-column">
+      <div class="panel-header">
+        <h2>Bugünkü Görevler</h2>
+        <span class="panel-note">Bugün için planladığın işler</span>
+      </div>
+
+      <% const pendingTasks=(tasks || []).filter(t=> !t.isCompleted); const
+        doneTasks = (tasks || []).filter(t => t.isCompleted); %>
+
+        <div class="task-card-list">
+          <!-- ✅ YAPILACAKLAR -->
+          <% if (pendingTasks.length) { %>
+            <% pendingTasks.forEach(task=> { %>
+              <article class="task-card">
+                <div class="task-main">
+                  <div class="task-left">
+                    <span class="task-check"></span>
+                    <div>
+                      <h3 class="task-title">
+                        <%= task.title %>
+                      </h3>
+                      <p class="task-meta">
+                        ⏱ <%= task.duration %> dk · <%= task.category %>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="task-right">
+                    <span class="task-xp">+<%= task.xp %> XP</span>
+
+                    <div class="task-actions" style="display: flex; gap: 10px; align-items: center">
+                      <!-- Tamamla -->
+                      <form action="/todo/<%= task._id.toString() %>/toggle" method="POST" style="display: inline">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button class="task-complete-btn" type="submit">
+                          Tamamla
+                        </button>
+                      </form>
+
+                      <!-- Sil -->
+                      <form action="/todo/<%= task._id.toString() %>/delete" method="POST" style="display: inline">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button class="task-delete-btn" type="submit" aria-label="Görevi sil">
+                          ✕
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <% }) %>
+                <% } else { %>
+                  <p class="empty-note">
+                    Bugün için yapılacak görev yok. Yeni bir parşömen ekle ✨
+                  </p>
+                  <% } %>
+
+                    <!-- ✅ TAMAMLANANLAR -->
+                    <% if (doneTasks.length) { %>
+                      <div style="margin-top: 18px">
+                        <div class="panel-header" style="padding: 0; margin-bottom: 10px">
+                          <h2 style="font-size: 1.15rem">Tamamlananlar</h2>
+                          <span class="panel-note">Bugün bitirdiğin görevler</span>
+                        </div>
+
+                        <% doneTasks.forEach(task=> { %>
+                          <article class="task-card is-completed">
+                            <div class="task-main">
+                              <div class="task-left">
+                                <span class="task-check"></span>
+                                <div>
+                                  <h3 class="task-title">
+                                    <%= task.title %>
+                                  </h3>
+                                  <p class="task-meta">
+                                    ⏱ <%= task.duration %> dk · <%= task.category %>
+                                  </p>
+                                </div>
+                              </div>
+
+                              <div class="task-right">
+                                <span class="task-xp">+<%= task.xp %> XP</span>
+
+                                <div class="task-actions" style="display: flex; gap: 10px; align-items: center">
+                                  <!-- Geri al -->
+                                  <form action="/todo/<%= task._id.toString() %>/toggle" method="POST"
+                                    style="display: inline">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <button class="task-complete-btn" type="submit">
+                                      Geri al
+                                    </button>
+                                  </form>
+
+                                  <!-- Sil -->
+                                  <form action="/todo/<%= task._id.toString() %>/delete" method="POST"
+                                    style="display: inline">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <button class="task-delete-btn" type="submit" aria-label="Görevi sil">
+                                      ✕
+                                    </button>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </article>
+                          <% }) %>
+                      </div>
+                      <% } %>
+        </div>
+    </div>
+
+    <!-- SAĞ: Sonraki Günler (DB'den) -->
+    <div class="todo-column">
+      <div class="panel-header">
+        <h2>Sonraki Günler</h2>
+        <span class="panel-note">Yarın ve sonraki günlerin görevleri</span>
+      </div>
+
+      <div class="day-card-list">
+        <% if (nextDays && nextDays.length) { %>
+          <% nextDays.slice(0, 5).forEach(day=> { %>
+            <article class="day-card">
+              <div class="day-header">
+                <div>
+                  <span class="day-label">
+                    <%= day.label %>
+                  </span>
+                  <h3 class="day-date">
+                    <%= day.title %>
+                  </h3>
+                </div>
+                <span class="day-count">
+                  <%= day.count %> görev
+                </span>
+              </div>
+
+              <ul class="day-task-list">
+                <% day.tasks.slice(0, 4).forEach(t=> { %>
+                  <li>
+                    <span class="dot"></span>
+                    <%= t.title %> (<%= t.duration %> dk)
+                  </li>
+                  <% }) %>
+                    <% if (day.tasks.length> 4) { %>
+                      <li style="opacity: 0.75">
+                        + <%= day.tasks.length - 4 %> görev daha…
+                      </li>
+                      <% } %>
+              </ul>
+            </article>
+            <% }) %>
+              <% } else { %>
+                <p class="empty-note">Yarın ve sonraki günler için görev yok ✨</p>
+                <% } %>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- GÖREV EKLE MODALI -->
+<div class="task-modal-backdrop" id="taskModal">
+  <div class="task-modal">
+    <h2>Yeni Görev Ekle</h2>
+
+    <form action="/todo" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>
+        Görev adı
+        <input type="text" name="title" placeholder="Örn: Veri Yapıları tekrar" required />
+      </label>
+
+      <div class="modal-row">
+        <label>
+          Tarih
+          <input type="date" name="date" value="<%= typeof todayISO !== 'undefined' ? todayISO : '' %>" />
+        </label>
+        <label>
+          Süre (dk)
+          <input type="number" name="duration" min="5" step="5" value="25" />
+        </label>
+      </div>
+
+      <label>
+        Kategori
+        <select name="category">
+          <option value="Ders">Ders</option>
+          <option value="Proje">Proje</option>
+          <option value="Mola">Mola</option>
+          <option value="Kişisel">Kişisel</option>
+        </select>
+      </label>
+
+      <input type="hidden" name="xp" value="10" />
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="closeTaskModal">
+          Vazgeç
+        </button>
+        <button type="submit" class="btn-primary">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const openBtn = document.getElementById("openTaskModal");
+  const closeBtn = document.getElementById("closeTaskModal");
+  const modal = document.getElementById("taskModal");
+
+  if (openBtn && closeBtn && modal) {
+    openBtn.addEventListener("click", () => modal.classList.add("is-open"));
+    closeBtn.addEventListener("click", () => modal.classList.remove("is-open"));
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("is-open");
+    });
+  }
+</script>

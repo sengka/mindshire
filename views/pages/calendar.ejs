@@ -1,0 +1,556 @@
+﻿<div class="fixed-background"></div>
+
+<main class="calendar-page">
+  <header class="calendar-header">
+    <div>
+      <h1 class="calendar-title">Takvim</h1>
+      <p class="calendar-subtitle">
+        Görevler ve sınavlar aynı büyü kitabında ✨
+      </p>
+    </div>
+
+    <div class="calendar-actions">
+      <div class="view-toggle" role="tablist" aria-label="Takvim görünümü">
+        <button class="toggle-btn is-active" type="button" id="btnMonth" role="tab">
+          Ay
+        </button>
+        <button class="toggle-btn" type="button" id="btnWeek" role="tab">
+          Hafta
+        </button>
+      </div>
+
+      <a class="btn-secondary" href="/calendar?ym=<%= ym %>">Bu ay</a>
+      <button class="btn-primary" id="openEventModal">
+        + Sınav / Etkinlik ekle
+      </button>
+    </div>
+  </header>
+
+  <section class="calendar-layout">
+    <!-- SOL: Takvim -->
+    <div class="calendar-panel">
+      <div class="calendar-topbar">
+        <h2 class="month-title">
+          <%= monthTitle %>
+        </h2>
+
+        <% const y=Number(ym.slice(0,4)); const m=Number(ym.slice(5,7)); const prevY=m===1 ? y - 1 : y; const
+          prevM=m===1 ? 12 : m - 1; const nextY=m===12 ? y + 1 : y; const nextM=m===12 ? 1 : m + 1; const
+          prevYM=`${prevY}-${String(prevM).padStart(2,'0')}`; const nextYM=`${nextY}-${String(nextM).padStart(2,'0')}`;
+          %>
+
+          <div class="calendar-nav">
+            <a class="btn-secondary" href="/calendar?ym=<%= prevYM %>">←</a>
+            <a class="btn-secondary" href="/calendar?ym=<%= nextYM %>">→</a>
+          </div>
+      </div>
+
+      <!-- AY GÖRÜNÜMÜ -->
+      <div id="monthView" class="calendar-grid-wrap">
+        <div class="calendar-grid">
+          <div class="cal-head">Pzt</div>
+          <div class="cal-head">Sal</div>
+          <div class="cal-head">Çar</div>
+          <div class="cal-head">Per</div>
+          <div class="cal-head">Cum</div>
+          <div class="cal-head">Cmt</div>
+          <div class="cal-head">Paz</div>
+
+          <% cells.forEach(c=> { %>
+            <button class="cal-cell <%= c.inMonth ? '' : 'is-out' %>" type="button" data-date="<%= c.key %>"
+              <%=c.inMonth ? "" : "disabled" %>
+              >
+              <div class="cal-cell-top">
+                <div class="cal-day">
+                  <%= c.dayNum %>
+                </div>
+
+                <div class="cal-badges">
+                  <% if (c.taskCount) { %>
+                    <span class="badge badge-task">
+                      <%= c.taskCount %>
+                    </span>
+                    <% } %>
+                      <% if (c.eventCount) { %>
+                        <span class="badge badge-event">
+                          <%= c.eventCount %>
+                        </span>
+                        <% } %>
+                </div>
+              </div>
+
+              <!-- JS buraya mini preview basacak -->
+              <div class="cal-preview" aria-hidden="true"></div>
+            </button>
+            <% }) %>
+        </div>
+      </div>
+
+      <!-- HAFTA GÖRÜNÜMÜ (JS dolduruyor) -->
+      <div id="weekView" class="week-view" style="display: none">
+        <div class="week-head">
+          <div class="week-title" id="weekTitle">Hafta</div>
+          <div class="week-note">Seçtiğin güne göre 7 günlük görünüm</div>
+        </div>
+        <div id="weekGrid" class="week-grid"></div>
+      </div>
+    </div>
+
+    <!-- SAĞ: Gün detay -->
+    <aside class="calendar-side">
+      <div class="panel-header">
+        <h2 id="sideTitle">Gün seç</h2>
+        <span class="panel-note">Detayları görmek için takvimden bir gün seç</span>
+      </div>
+
+      <div id="sideContent" class="side-content">
+        <p class="empty-note">Henüz bir gün seçilmedi.</p>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<!-- Etkinlik Ekle/Düzenle Modal -->
+<div class="task-modal-backdrop" id="eventModal">
+  <div class="task-modal">
+    <h2 id="eventModalTitle">Sınav / Etkinlik Ekle</h2>
+
+    <!-- ✅ id ekledik: JS action değiştirecek -->
+    <form action="/calendar/event?ym=<%= ym %>" method="POST" id="eventForm">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <label>
+        Başlık
+        <input type="text" name="title" placeholder="Örn: Veri Yapıları Finali" required />
+      </label>
+
+      <div class="modal-row">
+        <label>
+          Tarih
+          <input type="date" name="date" required />
+        </label>
+        <label>
+          Saat (opsiyonel)
+          <input type="time" name="time" />
+        </label>
+      </div>
+
+      <label>
+        Tür
+        <select name="type">
+          <option value="exam">Sınav</option>
+          <option value="deadline">Son Teslim</option>
+          <option value="event">Etkinlik</option>
+          <option value="reminder">Hatırlatma</option>
+        </select>
+      </label>
+
+      <label>
+        Konum (opsiyonel)
+        <input type="text" name="location" placeholder="Örn: D-201" />
+      </label>
+
+      <label>
+        Not (opsiyonel)
+        <input type="text" name="notes" placeholder="Örn: 2 ünite + çıkmış sorular" />
+      </label>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="closeEventModal">
+          Vazgeç
+        </button>
+        <button type="submit" class="btn-primary" id="eventSubmitBtn">Kaydet</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // ====== Server’dan gelen data ======
+  const tasks = <%- JSON.stringify(tasks || []) %>;
+  const events = <%- JSON.stringify(events || []) %>;
+  const ymFromServer = "<%= ym %>";
+  const csrfToken = "<%= csrfToken %>"; // CSRF token for dynamic forms
+
+  // ====== Global state: seçili gün ======
+  let selectedDateKey = null;
+
+  // ====== Utils ======
+  function keyOfLocal(d) {
+    // d: Date|string
+    const dt = new Date(d);
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, "0");
+    const day = String(dt.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  // TR tarih formatı: "20 Aralık 2025"
+  const fmtTR = new Intl.DateTimeFormat("tr-TR", { day: "numeric", month: "long", year: "numeric" });
+  function prettyTR(yyyyMMdd) {
+    const [y, m, d] = String(yyyyMMdd).split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    return fmtTR.format(dt);
+  }
+
+  function esc(str) {
+    return String(str || "").replace(/[&<>"']/g, s => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[s]));
+  }
+
+  // ====== Gün bazlı map ======
+  const byDay = {};
+  for (const t of tasks) {
+    const k = keyOfLocal(t.date);
+    if (!byDay[k]) byDay[k] = { tasks: [], events: [] };
+    byDay[k].tasks.push(t);
+  }
+  for (const e of events) {
+    const k = keyOfLocal(e.date);
+    if (!byDay[k]) byDay[k] = { tasks: [], events: [] };
+    // edit için dateKey de koy
+    e.dateKey = k;
+    byDay[k].events.push(e);
+  }
+
+  // ====== Modal helpers (Create <-> Edit) ======
+  function resetEventModalToCreate() {
+    const modal = document.getElementById("eventModal");
+    const form = document.getElementById("eventForm");
+    const titleEl = document.getElementById("eventModalTitle");
+    const submitBtn = document.getElementById("eventSubmitBtn");
+
+    titleEl.textContent = "Sınav / Etkinlik Ekle";
+    submitBtn.textContent = "Kaydet";
+    form.action = `/calendar/event?ym=${encodeURIComponent(ymFromServer)}`;
+    form.reset();
+
+    // Tarih alanını otomatik doldur (seçili gün varsa onu, yoksa bugünü kullan)
+    const dateInput = form.querySelector('input[name="date"]');
+    if (dateInput) {
+      dateInput.value = selectedDateKey || keyOfLocal(new Date());
+    }
+  }
+
+  function openEditEvent(e) {
+    const modal = document.getElementById("eventModal");
+    const form = document.getElementById("eventForm");
+    const titleEl = document.getElementById("eventModalTitle");
+    const submitBtn = document.getElementById("eventSubmitBtn");
+
+    // inputs
+    const iTitle = form.querySelector('input[name="title"]');
+    const iDate = form.querySelector('input[name="date"]');
+    const iTime = form.querySelector('input[name="time"]');
+    const iType = form.querySelector('select[name="type"]');
+    const iLoc = form.querySelector('input[name="location"]');
+    const iNotes = form.querySelector('input[name="notes"]');
+
+    titleEl.textContent = "Etkinliği Düzenle";
+    submitBtn.textContent = "Güncelle";
+    form.action = `/calendar/event/${encodeURIComponent(e._id)}/update?ym=${encodeURIComponent(ymFromServer)}`;
+
+    iTitle.value = e.title || "";
+    iDate.value = e.dateKey || (e.date ? String(e.date).slice(0, 10) : "");
+    iTime.value = e.time || "";
+    iType.value = e.type || "event";
+    iLoc.value = e.location || "";
+    iNotes.value = e.notes || "";
+
+    modal.classList.add("is-open");
+  }
+
+  // ====== Sağ panel render ======
+  function renderDay(dateKey) {
+    selectedDateKey = dateKey; // Seçili günü kaydet
+    const sideTitle = document.getElementById("sideTitle");
+    const sideContent = document.getElementById("sideContent");
+    const payload = byDay[dateKey] || { tasks: [], events: [] };
+
+    sideTitle.textContent = prettyTR(dateKey);
+
+    const pending = payload.tasks.filter(t => !t.isCompleted);
+    const done = payload.tasks.filter(t => t.isCompleted);
+
+    const tasksBlock = `
+      <div class="side-block">
+        <div class="side-block-head">
+          <h3>Yapılacaklar</h3>
+          <span class="side-count">${pending.length}</span>
+        </div>
+
+        ${pending.length ? `
+          <ul class="side-list">
+            ${pending.map(t => `
+              <li class="side-item">
+                <span class="dot dot-task"></span>
+                <div class="side-item-text">
+                  <div class="side-item-title">${esc(t.title)}</div>
+                  <div class="side-item-meta">${esc(t.duration)} dk · ${esc(t.category)}</div>
+                </div>
+              </li>
+            `).join("")}
+          </ul>
+        ` : `<p class="empty-note">Yapılacak yok.</p>`}
+      </div>
+
+      <div class="side-block">
+        <div class="side-block-head">
+          <h3>Tamamlananlar</h3>
+          <span class="side-count">${done.length}</span>
+        </div>
+
+        ${done.length ? `
+          <ul class="side-list">
+            ${done.map(t => `
+              <li class="side-item is-done">
+                <span class="dot dot-done"></span>
+                <div class="side-item-text">
+                  <div class="side-item-title">${esc(t.title)}</div>
+                  <div class="side-item-meta">${esc(t.duration)} dk · ${esc(t.category)}</div>
+                </div>
+              </li>
+            `).join("")}
+          </ul>
+        ` : `<p class="empty-note">Tamamlanan yok.</p>`}
+      </div>
+    `;
+
+    const eventsBlock = `
+      <div class="side-block">
+        <div class="side-block-head">
+          <h3>Sınav / Etkinlik</h3>
+          <span class="side-count">${payload.events.length}</span>
+        </div>
+
+        ${payload.events.length ? `
+          <ul class="side-list">
+            ${payload.events.map(e => `
+              <li class="side-item">
+                <span class="dot dot-event"></span>
+
+                <div class="side-item-text">
+                  <div class="side-item-title">${esc(e.title)}</div>
+                  <div class="side-item-meta">
+                    ${e.time ? esc(e.time) : "Saat yok"}
+                    ${e.location ? " · " + esc(e.location) : ""}
+                  </div>
+
+                  <div class="side-item-actions" style="margin-top:8px; display:flex; gap:8px;">
+                    <button
+                      type="button"
+                      class="btn-secondary btn-xs"
+                      data-action="edit-event"
+                      data-id="${esc(e._id)}"
+                    >
+                      Düzenle
+                    </button>
+
+                    <form
+                      action="/calendar/event/${esc(e._id)}/delete?ym=${encodeURIComponent(ymFromServer)}"
+                      method="POST"
+                      style="display:inline;"
+                    >
+                      <input type="hidden" name="_csrf" value="${csrfToken}">
+                      <button
+                        type="submit"
+                        class="btn-secondary btn-xs"
+                        onclick="return confirm('Bu etkinlik silinsin mi?')"
+                      >
+                        Sil
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </li>
+            `).join("")}
+          </ul>
+        ` : `<p class="empty-note">Etkinlik yok.</p>`}
+      </div>
+    `;
+
+    sideContent.innerHTML = tasksBlock + eventsBlock;
+
+    // Edit button handlers
+    sideContent.querySelectorAll('[data-action="edit-event"]').forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
+        const e = payload.events.find(x => String(x._id) === String(id));
+        if (e) openEditEvent(e);
+      });
+    });
+  }
+
+  // ====== Hücre mini preview ======
+  function buildCellPreviews() {
+    document.querySelectorAll(".cal-cell").forEach(btn => {
+      const dateKey = btn.getAttribute("data-date");
+      if (!dateKey) return;
+
+      const payload = byDay[dateKey] || { tasks: [], events: [] };
+      const previewEl = btn.querySelector(".cal-preview");
+      if (!previewEl) return;
+
+      const totalItems = payload.tasks.length + payload.events.length;
+      if (!totalItems) {
+        previewEl.innerHTML = "";
+        return;
+      }
+
+      const lines = [];
+      const pending = payload.tasks.filter(t => !t.isCompleted);
+
+      for (const t of pending.slice(0, 2)) lines.push("• " + (t.title || ""));
+      if (lines.length < 2) {
+        for (const e of payload.events.slice(0, 2 - lines.length)) lines.push("✦ " + (e.title || ""));
+      }
+
+      const shown = lines.length;
+      const extra = totalItems - shown;
+
+      previewEl.innerHTML = `
+        <div class="preview-lines">
+          ${lines.map(s => `<div class="preview-line">${esc(s)}</div>`).join("")}
+          ${extra > 0 ? `<div class="preview-more">+${extra} daha</div>` : ``}
+        </div>
+      `;
+    });
+  }
+
+  // ====== Ay/Hafta görünümü ======
+  const monthView = document.getElementById("monthView");
+  const weekView = document.getElementById("weekView");
+  const weekGrid = document.getElementById("weekGrid");
+  const weekTitle = document.getElementById("weekTitle");
+  const btnMonth = document.getElementById("btnMonth");
+  const btnWeek = document.getElementById("btnWeek");
+
+  function setView(mode) {
+    const isWeek = mode === "week";
+    monthView.style.display = isWeek ? "none" : "block";
+    weekView.style.display = isWeek ? "block" : "none";
+
+    btnMonth.classList.toggle("is-active", !isWeek);
+    btnWeek.classList.toggle("is-active", isWeek);
+  }
+
+  function mondayOf(dateKey) {
+    const [y, m, d] = String(dateKey).split("-").map(Number);
+    const dt = new Date(y, m - 1, d);
+    const day = (dt.getDay() + 6) % 7; // pazartesi=0
+    dt.setDate(dt.getDate() - day);
+    return dt;
+  }
+
+  function yyyyMmDdLocal(dt) {
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, "0");
+    const d = String(dt.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
+  function renderWeek(centerDateKey) {
+    const mon = mondayOf(centerDateKey);
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(mon);
+      d.setDate(mon.getDate() + i);
+      const k = yyyyMmDdLocal(d);
+      const payload = byDay[k] || { tasks: [], events: [] };
+      days.push({ key: k, label: prettyTR(k), payload });
+    }
+
+    weekTitle.textContent = `${prettyTR(days[0].key)} – ${prettyTR(days[6].key)}`;
+
+    weekGrid.innerHTML = days.map(day => {
+      const pending = day.payload.tasks.filter(t => !t.isCompleted);
+      const done = day.payload.tasks.filter(t => t.isCompleted);
+
+      const list = []
+        .concat(pending.map(t => ({ kind: "task", title: t.title })))
+        .concat(day.payload.events.map(e => ({ kind: "event", title: e.title })))
+        .concat(done.slice(0, 1).map(t => ({ kind: "done", title: t.title })));
+
+      const top3 = list.slice(0, 3);
+      const total = day.payload.tasks.length + day.payload.events.length;
+      const extra = total - top3.length;
+
+      return `
+        <button class="week-day" type="button" data-date="${day.key}">
+          <div class="week-day-top">
+            <div class="week-day-name">${esc(day.label)}</div>
+            <div class="week-day-count">
+              ${pending.length ? `<span class="pill pill-task">${pending.length} görev</span>` : ``}
+              ${day.payload.events.length ? `<span class="pill pill-event">${day.payload.events.length} etkinlik</span>` : ``}
+            </div>
+          </div>
+          <div class="week-day-lines">
+            ${top3.map(x => `<div class="week-line">${esc((x.kind === "event" ? "✦ " : x.kind === "done" ? "✓ " : "• ") + (x.title || ""))}</div>`).join("")}
+            ${extra > 0 ? `<div class="week-more">+${extra} daha</div>` : ``}
+          </div>
+        </button>
+      `;
+    }).join("");
+
+    weekGrid.querySelectorAll(".week-day").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const k = btn.getAttribute("data-date");
+        renderDay(k);
+        weekGrid.querySelectorAll(".week-day").forEach(b => b.classList.remove("is-active"));
+        btn.classList.add("is-active");
+      });
+    });
+  }
+
+  // ====== Hücre tıklama ======
+  document.querySelectorAll(".cal-cell").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const dateKey = btn.getAttribute("data-date");
+      if (!dateKey) return;
+
+      renderDay(dateKey);
+
+      document.querySelectorAll(".cal-cell").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+
+      // Hafta görünümü açıksa da senkronla
+      if (weekView.style.display !== "none") renderWeek(dateKey);
+    });
+  });
+
+  // Toggle
+  btnMonth.addEventListener("click", () => setView("month"));
+  btnWeek.addEventListener("click", () => {
+    setView("week");
+    const active = document.querySelector(".cal-cell.is-active");
+    const k = active ? active.getAttribute("data-date") : keyOfLocal(new Date());
+    renderWeek(k);
+  });
+
+  // ====== Modal open/close ======
+  const openBtn = document.getElementById("openEventModal");
+  const closeBtn = document.getElementById("closeEventModal");
+  const modal = document.getElementById("eventModal");
+
+  if (openBtn && closeBtn && modal) {
+    openBtn.addEventListener("click", () => {
+      resetEventModalToCreate();
+      modal.classList.add("is-open");
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("is-open");
+      resetEventModalToCreate();
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("is-open");
+        resetEventModalToCreate();
+      }
+    });
+  }
+
+  // ====== İlk yükleme ======
+  buildCellPreviews();
+</script>

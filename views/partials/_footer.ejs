@@ -1,0 +1,90 @@
+<footer class="magic-footer">
+  <% if (typeof user !=='undefined' && user) { %>
+    <!-- GİRİŞ YAPAN KULLANICI FOOTER'I -->
+    <div class="footer-inner">
+      <div class="footer-col footer-brand">
+        <div class="footer-logo">Mindshire</div>
+        <p class="footer-desc">
+          Büyülü çalışma kütüphanesi. Görevlerini, takvimini ve istatistiklerini
+          tek bir yerde toplayan bir çalışma diyarı.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-title">Site Haritası</h4>
+        <ul class="footer-links">
+          <li><a href="/dashboard">Ana Sayfa / Dashboard</a></li>
+          <li><a href="/room/personal">Çalışma Odası – Kişisel Oda</a></li>
+          <li><a href="/room/community">Çalışma Odası – Topluluk Odası</a></li>
+          <li><a href="/calendar">Takvim</a></li>
+          <li><a href="/todo">To-Do</a></li>
+          <li><a href="/courses">Dersler</a></li>
+          <li><a href="/stats">İstatistikler</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-title">Çalışma & İlerleme</h4>
+        <ul class="footer-links">
+          <li><a href="/stats/pomodoro">Pomodoro geçmişi</a></li>
+          <li><a href="/stats/weekly">Haftalık grafikler</a></li>
+          <li><a href="/stats/streaks">Streak görünümü</a></li>
+          <li><a href="/todo?filter=today">Bugünkü görevler</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-title">Hesap</h4>
+        <ul class="footer-links">
+          <li><a href="/profile">Profilim</a></li>
+          <li><a href="/settings">Ayarlar</a></li>
+          <li>
+            <form method="POST" action="/logout" style="display: inline;">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit"
+                style="background: none; border: none; color: inherit; cursor: pointer; padding: 0; font: inherit; text-decoration: underline;">Çıkış
+                Yap</button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <% } else { %>
+      <!-- GİRİŞ YAPMAYAN KULLANICI FOOTER'I -->
+      <div class="footer-inner footer-inner-guest">
+        <div class="footer-col footer-brand">
+          <div class="footer-logo">Mindshire</div>
+          <p class="footer-desc">
+            Mindshire, büyülü bir çalışma kütüphanesi. Görevlerini oyunlaştırmak ve
+            odaklı çalışmak için içeri adım at.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title">Site Haritası</h4>
+          <ul class="footer-links">
+            <li><a href="/">Ana Sayfa</a></li>
+            <li><a href="/kesfet">Keşfet</a></li>
+            <li><a href="/giris">Giriş Yap</a></li>
+            <li><a href="/kayit">Kayıt Ol</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title">Hakkında</h4>
+          <ul class="footer-links">
+            <li><span>Çalışma odası temalı web uygulaması</span></li>
+            <li><span>Web programlama dersi projesi</span></li>
+          </ul>
+        </div>
+      </div>
+      <% } %>
+
+        <div class="footer-bottom">
+          <span>© <%= new Date().getFullYear() %> Mindshire. Tüm hakları saklıdır.</span>
+          <span class="footer-mini-text">
+            Bu proje web programlama dersi kapsamında geliştirilmiştir.
+          </span>
+        </div>
+</footer>

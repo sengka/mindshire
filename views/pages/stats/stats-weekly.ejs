@@ -1,0 +1,116 @@
+<div class="fixed-background"></div>
+
+<section class="stats-page">
+    <div class="stats-container">
+        <div class="stats-header">
+            <h1 class="stats-title">📊 Haftalık Grafikler</h1>
+            <p class="stats-subtitle">Son 4 haftanın detaylı analizi</p>
+        </div>
+
+        <!-- Özet Kartlar -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value">
+                    <%= totals.totalTime %>
+                </div>
+                <div class="stat-label">Toplam Süre (4 hafta)</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🍅</div>
+                <div class="stat-value">
+                    <%= totals.totalSessions %>
+                </div>
+                <div class="stat-label">Toplam Seans</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-value">
+                    <%= totals.avgMinutesPerWeek %> dk
+                </div>
+                <div class="stat-label">Haftalık Ortalama</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">
+                    <%= totals.avgSessionsPerWeek %>
+                </div>
+                <div class="stat-label">Ortalama Seans/Hafta</div>
+            </div>
+        </div>
+
+        <!-- Haftalık Bar Chart -->
+        <div class="stats-section">
+            <h2>📅 Günlük Çalışma Süreleri</h2>
+            <% weeklyData.forEach((week, weekIndex)=> { %>
+                <div class="week-section">
+                    <h3>Hafta <%= week.weekNumber %>
+                            (<%= week.startDate.toLocaleDateString('tr-TR', { day: 'numeric' , month: 'short' }) %> -
+                                <%= week.endDate.toLocaleDateString('tr-TR', { day: 'numeric' , month: 'short' }) %>)
+                    </h3>
+                    <div class="week-summary">
+                        Toplam: <%= week.totalMinutes %> dk • <%= week.totalSessions %> seans
+                    </div>
+
+                    <div class="week-chart">
+                        <% week.days.forEach(day=> { %>
+                            <div class="day-bar">
+                                <div class="bar-container">
+                                    <div class="bar-fill"
+                                        style="height: <%= Math.min(100, (day.minutes / 120) * 100) %>%">
+                                        <% if (day.minutes> 0) { %>
+                                            <span class="bar-tooltip">
+                                                <%= day.minutes %> dk
+                                            </span>
+                                            <% } %>
+                                    </div>
+                                </div>
+                                <div class="bar-day">
+                                    <%= day.date.toLocaleDateString('tr-TR', { weekday: 'short' }) %>
+                                </div>
+                                <div class="bar-date">
+                                    <%= day.date.getDate() %>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+                <% }) %>
+        </div>
+
+        <!-- Kategori Dağılımı -->
+        <div class="stats-section">
+            <h2>📚 Kategori Bazında Dağılım (Son 4 Hafta)</h2>
+            <div class="category-stats">
+                <% if (categoryStats && categoryStats.length> 0) { %>
+                    <% categoryStats.forEach(cat=> { %>
+                        <div class="category-bar-item">
+                            <div class="category-info">
+                                <span class="category-name">
+                                    <%= cat._id %>
+                                </span>
+                                <span class="category-value">
+                                    <%= cat.count %> görev • <%= cat.totalMinutes %> dk
+                                </span>
+                            </div>
+                            <div class="category-bar-bg">
+                                <div class="category-bar-fill"
+                                    style="width: <%= (cat.count / categoryStats[0].count) * 100 %>%"></div>
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <p class="empty-state">Henüz tamamlanmış görev yok.</p>
+                                <% } %>
+            </div>
+        </div>
+
+        <!-- Geri Dön -->
+        <div class="stats-back">
+            <a href="/stats" class="btn-secondary">← Genel İstatistiklere Dön</a>
+        </div>
+    </div>
+</section>

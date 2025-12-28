@@ -1,0 +1,31 @@
+/* pages/auth.css */
+/* SAYFA: KAYIT & GİRİŞ (Auth) */
+
+.register-container {
+    max-width: 800px !important;
+    width: 95%;
+    margin: 20px auto;
+    background: rgba(10, 5, 20, 0.75);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+    padding: 2.5rem;
+    border-radius: 20px;
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-redirect-top {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 0.95rem;
+    color: #bbb;
+}
+
+.login-redirect-top a {
+    color: var(--gold);
+    font-weight: 600;
+}

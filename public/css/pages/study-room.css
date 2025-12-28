@@ -1,0 +1,471 @@
+/* public/css/pages/study-room.css */
+
+/* Dinamik oda arkaplanı (community room için) */
+.room-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+.study-room {
+  padding: 28px;
+}
+
+.study-room__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.study-room__title {
+  margin: 0;
+  font-size: 36px;
+  letter-spacing: 0.2px;
+}
+
+.study-room__subtitle {
+  margin: 6px 0 0 0;
+  opacity: 0.85;
+}
+
+.study-room__container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.study-room__grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.study-room__card {
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(10, 8, 18, 0.55);
+  backdrop-filter: blur(10px);
+  padding: 18px;
+}
+
+.study-room__card h2 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  opacity: 0.95;
+}
+
+.study-room__row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.study-room__input {
+  width: 100%;
+  padding: 12px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.92);
+  outline: none;
+}
+
+.study-room__hint {
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.study-room__player {
+  margin-top: 12px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.study-room__player iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.pomodoro__time {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 10px 0 14px 0;
+  text-align: center;
+}
+
+.pomodoro__controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pomodoro__modes {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 13px;
+  opacity: 0.92;
+}
+
+/* Topluluk oda düzeni */
+.community-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 0.9fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.community-topbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+/* Avatar listesi (placeholder) */
+.avatar-list {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.10);
+}
+
+#ytStatus[data-type="error"] {
+  opacity: 0.9;
+}
+
+#ytStatus[data-type="success"] {
+  opacity: 0.95;
+}
+
+.pomodoro__modes .badge {
+  cursor: pointer;
+}
+
+.pomodoro__modes .badge.is-active {
+  border-color: rgba(255, 215, 0, 0.55);
+}
+
+.stats-row {
+  display: flex;
+  gap: 14px;
+  margin: 10px 0 6px;
+  flex-wrap: wrap;
+}
+
+.stat {
+  flex: 1;
+  min-width: 160px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .18);
+}
+
+.stat__label {
+  font-size: 13px;
+  opacity: .8;
+}
+
+.stat__value {
+  margin-top: 6px;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.log-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.log-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .18);
+}
+
+.log-item__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.log-item__meta {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  opacity: .9;
+}
+
+.log-item__right {
+  text-align: right;
+  min-width: 120px;
+}
+
+.log-item__mins {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.muted {
+  opacity: .75;
+}
+
+/* ===== Theme Carousel (kaydırmalı galeri) ===== */
+.theme-carousel {
+  position: relative;
+  margin-top: 10px;
+}
+
+.theme-track {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 6px 44px;
+  /* ok butonları için boşluk */
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.theme-track::-webkit-scrollbar {
+  height: 10px;
+}
+
+.theme-track::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+
+.theme-track::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+}
+
+.theme-slide {
+  flex: 0 0 auto;
+  width: 320px;
+  max-width: 78vw;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  background: rgba(0, 0, 0, 0.18);
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  scroll-snap-align: start;
+  text-align: left;
+}
+
+.theme-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.02);
+}
+
+.theme-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+
+.theme-title {
+  font-size: 14px;
+  font-weight: 600;
+  opacity: 0.92;
+}
+
+.theme-slide.is-selected {
+  border-color: rgba(255, 215, 0, 0.65);
+  box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.16);
+}
+
+.theme-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+  z-index: -1;
+}
+
+
+.theme-nav--left {
+  left: 6px;
+}
+
+.theme-nav--right {
+  right: 6px;
+}
+
+.theme-nav:hover {
+  border-color: rgba(255, 215, 0, 0.55);
+}
+
+@media (max-width: 520px) {
+  .theme-slide {
+    width: 270px;
+  }
+}
+
+
+@media (max-width: 900px) {
+  .theme-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .theme-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Announcement Panel Styles ===== */
+.announcement-box {
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  background: rgba(255, 215, 0, 0.08);
+  margin-bottom: 16px;
+}
+
+.announcement-text {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  line-height: 1.6;
+  opacity: 0.95;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.announcement-reactions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.reaction-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.22);
+  font-size: 14px;
+  cursor: default;
+  transition: all 0.2s ease;
+}
+
+.reaction-badge.user-reacted {
+  border-color: rgba(255, 215, 0, 0.45);
+  background: rgba(255, 215, 0, 0.12);
+}
+
+.emoji-picker {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.emoji-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: grid;
+  place-items: center;
+}
+
+.emoji-btn:hover {
+  border-color: rgba(255, 215, 0, 0.45);
+  background: rgba(255, 215, 0, 0.12);
+  transform: scale(1.1);
+}
+
+.emoji-btn:active {
+  transform: scale(0.95);
+}
+
+
+@media (max-width: 900px) {
+
+  .study-room__grid,
+  .community-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .study-room__title {
+    font-size: 30px;
+  }
+}

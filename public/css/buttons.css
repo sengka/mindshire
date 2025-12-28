@@ -1,0 +1,68 @@
+/* buttons.css */
+/* BİLEŞENLER: BUTONLAR (Components) */
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-magic {
+    padding: 18px 45px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 50px;
+    border-width: 1px;
+    border-style: solid;
+    transition: all 0.5s ease;
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-magic .icon {
+    margin-right: 12px;
+    font-size: 1.1rem;
+}
+
+/* Buton Varyasyonları */
+.btn-discover {
+    color: var(--gold);
+    border-color: var(--gold);
+    background: linear-gradient(45deg, rgba(255, 219, 88, 0.05), rgba(255, 165, 0, 0.1));
+    box-shadow: 0 0 20px rgba(255, 219, 88, 0.1);
+}
+.btn-discover:hover {
+    background: linear-gradient(45deg, var(--gold), #ffb300);
+    color: #1a0f00;
+    box-shadow: 0 0 40px rgba(255, 219, 88, 0.5);
+}
+
+.btn-login {
+    color: #cfd8dc;
+    border-color: #90a4ae;
+    background: linear-gradient(45deg, rgba(207, 216, 220, 0.05), rgba(144, 164, 174, 0.1));
+}
+.btn-login:hover {
+    background: linear-gradient(45deg, #b0bec5, #eceff1);
+    color: #263238;
+    box-shadow: 0 0 40px rgba(176, 190, 197, 0.5);
+}
+
+.btn-register {
+    color: #d7ccc8;
+    border-color: #a1887f;
+    background: linear-gradient(45deg, rgba(215, 204, 200, 0.05), rgba(161, 136, 127, 0.1));
+}
+.btn-register:hover {
+    background: linear-gradient(45deg, #d7ccc8, #efebe9);
+    color: #3e2723;
+    box-shadow: 0 0 40px rgba(215, 204, 200, 0.5);
+}

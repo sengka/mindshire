@@ -1,0 +1,110 @@
+<div class="fixed-background"></div>
+
+<section class="stats-page">
+    <div class="stats-container">
+        <div class="stats-header">
+            <h1 class="stats-title">📊 Genel İstatistikler</h1>
+            <p class="stats-subtitle">Çalışma performansın ve ilerleme özeti</p>
+        </div>
+
+        <!-- Özet Kartlar -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🍅</div>
+                <div class="stat-value">
+                    <%= stats.totalPomodoros %>
+                </div>
+                <div class="stat-label">Toplam Pomodoro</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-value">
+                    <%= stats.totalTime %>
+                </div>
+                <div class="stat-label">Toplam Çalışma Süresi</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">
+                    <%= stats.totalTasks %>
+                </div>
+                <div class="stat-label">Tamamlanan Görev</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-value">
+                    <%= stats.topCategory %>
+                </div>
+                <div class="stat-label">En Aktif Kategori</div>
+            </div>
+        </div>
+
+        <!-- Aylık Trend -->
+        <div class="stats-section">
+            <h2>📈 Son 6 Ayın Trendi</h2>
+            <div class="chart-container">
+                <% if (stats.monthlyTrend && stats.monthlyTrend.length> 0) { %>
+                    <div class="simple-chart">
+                        <% stats.monthlyTrend.forEach(month=> { %>
+                            <div class="chart-bar">
+                                <div class="bar-fill"
+                                    style="height: <%= Math.min(100, (month.totalMinutes / 300) * 100) %>%">
+                                    <span class="bar-label">
+                                        <%= Math.round(month.totalMinutes) %> dk
+                                    </span>
+                                </div>
+                                <div class="bar-month">
+                                    <%= month._id.month %>/<%= month._id.year %>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                    <% } else { %>
+                        <p class="empty-state">Henüz veri yok. Çalışmaya başla!</p>
+                        <% } %>
+            </div>
+        </div>
+
+        <!-- Kategori Dağılımı -->
+        <div class="stats-section">
+            <h2>📚 Kategori Dağılımı (Top 5)</h2>
+            <div class="category-list">
+                <% if (stats.categoryDistribution && stats.categoryDistribution.length> 0) { %>
+                    <% stats.categoryDistribution.forEach((cat, index)=> { %>
+                        <div class="category-item">
+                            <div class="category-rank">#<%= index + 1 %>
+                            </div>
+                            <div class="category-name">
+                                <%= cat._id %>
+                            </div>
+                            <div class="category-count">
+                                <%= cat.count %> görev
+                            </div>
+                        </div>
+                        <% }) %>
+                            <% } else { %>
+                                <p class="empty-state">Henüz tamamlanmış görev yok.</p>
+                                <% } %>
+            </div>
+        </div>
+
+        <!-- Hızlı Linkler -->
+        <div class="stats-links">
+            <a href="/stats/pomodoro" class="stats-link-card">
+                <span class="link-icon">🍅</span>
+                <span class="link-text">Pomodoro Geçmişi</span>
+            </a>
+            <a href="/stats/weekly" class="stats-link-card">
+                <span class="link-icon">📊</span>
+                <span class="link-text">Haftalık Grafikler</span>
+            </a>
+            <a href="/stats/streaks" class="stats-link-card">
+                <span class="link-icon">🔥</span>
+                <span class="link-text">Streak İstatistikleri</span>
+            </a>
+        </div>
+    </div>
+</section>

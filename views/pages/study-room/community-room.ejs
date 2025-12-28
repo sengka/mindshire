@@ -1,0 +1,275 @@
+<!-- Kullanıcının seçtiği tema arkaplanı -->
+<div class="room-background" style="background-image: url('/img/studybg/<%= room.themeKey %>.png');"></div>
+
+<section class="study-room">
+  <div class="study-room__container">
+    <div class="study-room__header">
+      <div>
+        <h1 class="study-room__title">
+          <%= room.title %>
+        </h1>
+        <p class="study-room__subtitle">
+          Tema: <strong>
+            <%= room.themeLabel %>
+          </strong>
+        </p>
+      </div>
+
+      <div class="study-room__row">
+        <a class="btn-secondary" href="/study-room/community">← Aktif odalar</a>
+
+        <% if (isHost) { %>
+          <form method="POST" action="/study-room/community/<%= room._id %>/end" style="display: inline">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button class="btn-secondary" type="submit">Odayı Bitir</button>
+          </form>
+          <% } %>
+      </div>
+    </div>
+
+    <div class="community-topbar">
+      <span class="badge">👀 Ziyaret: <strong>
+          <%= room.totalVisits || 0 %>
+        </strong></span>
+      <span class="badge">
+        🟢 Online: <strong id="onlineCount">0</strong>
+      </span>
+
+
+      <span class="badge">🎨 Tema: <strong>
+          <%= room.themeLabel %>
+        </strong></span>
+    </div>
+
+
+    <div class="community-grid">
+      <!-- SOL: Pomodoro / ana alan -->
+      <div class="study-room__card">
+        <h2>Ortak Odak</h2>
+
+        <div class="pomodoro__time" id="pomoTime">
+          <%= String(room.focusMinutes).padStart(2,'0') %>:00
+        </div>
+
+        <div class="pomodoro__controls">
+          <button class="btn-primary" type="button" id="pomoStart">
+            Başlat
+          </button>
+          <button class="btn-secondary" type="button" id="pomoPause">
+            Durdur
+          </button>
+          <button class="btn-secondary" type="button" id="pomoReset">
+            Sıfırla
+          </button>
+        </div>
+
+        <div class="pomodoro__modes">
+          <button type="button" class="badge" id="modeWork" data-minutes="<%= room.focusMinutes %>">
+            🍅 Odak: <%= room.focusMinutes %> dk
+          </button>
+          <button type="button" class="badge" id="modeShort" data-minutes="<%= room.shortBreakMinutes %>">
+            ☕ Kısa mola: <%= room.shortBreakMinutes %> dk
+          </button>
+          <button type="button" class="badge" id="modeLong" data-minutes="<%= room.longBreakMinutes %>">
+            🌙 Uzun mola: <%= room.longBreakMinutes %> dk
+          </button>
+        </div>
+
+        <p class="study-room__hint" id="pomoStatus">Hazır.</p>
+
+      </div>
+
+      <!-- SAĞ: Katılımcılar -->
+      <div class="study-room__card">
+        <h2>Katılımcılar</h2>
+
+        <div class="avatar-list" id="avatarList">
+          <!-- User avatars will be rendered here via socket -->
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 📢 DUYURU PANELİ -->
+    <div class="study-room__card" style="margin-top: 16px">
+      <h2>📢 Duyuru</h2>
+
+      <div id="announcementContainer">
+        <% if (room.announcement?.text) { %>
+          <div class="announcement-box" id="announcementBox">
+            <p class="announcement-text" id="announcementText">
+              <%= room.announcement.text %>
+            </p>
+            <div class="announcement-reactions" id="announcementReactions">
+              <!-- Emoji reactions will be rendered here -->
+            </div>
+          </div>
+          <% } else { %>
+            <p class="study-room__hint" id="noAnnouncementMsg">Henüz duyuru yok.</p>
+            <% } %>
+      </div>
+
+      <% if (isHost) { %>
+        <form id="announcementForm" style="margin-top: 16px">
+          <textarea class="study-room__input" name="announcementText" id="announcementTextInput"
+            placeholder="Duyuru yazın..." maxlength="500" rows="3"><%= room.announcement?.text || '' %></textarea>
+          <div class="study-room__row" style="margin-top: 10px">
+            <button class="btn-primary" type="submit">Duyuruyu Kaydet</button>
+            <% if (room.announcement?.text) { %>
+              <button class="btn-secondary" type="button" id="deleteAnnouncement">Sil</button>
+              <% } else { %>
+                <button class="btn-secondary" type="button" id="deleteAnnouncement" style="display:none">Sil</button>
+                <% } %>
+          </div>
+          <p class="study-room__hint" id="announcementStatus"></p>
+        </form>
+        <% } %>
+
+          <!-- Emoji Reaction Buttons (for all participants) -->
+          <div class="emoji-picker" style="margin-top: 16px">
+            <button class="emoji-btn" data-emoji="👍" type="button">👍</button>
+            <button class="emoji-btn" data-emoji="❤️" type="button">❤️</button>
+            <button class="emoji-btn" data-emoji="🔥" type="button">🔥</button>
+            <button class="emoji-btn" data-emoji="😮" type="button">😮</button>
+            <button class="emoji-btn" data-emoji="😢" type="button">😢</button>
+          </div>
+    </div>
+
+    <!-- ✅ HOST AYARLARI (Sadece host görür) -->
+    <% if (isHost) { %>
+      <div class="study-room__card" style="margin-top: 16px">
+        <details>
+          <summary>🛠 Oda Ayarları (Host)</summary>
+
+          <form id="hostSettingsForm" method="POST" action="/study-room/community/<%= room._id %>/settings">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <p class="study-room__hint">
+              Bu ayarlar kaydedilince oda planı ve pomodoro presetleri güncellenir.
+            </p>
+
+            <!-- ODA BAŞLIĞI -->
+            <div class="study-room__row">
+              <input class="study-room__input" name="title" value="<%= room.title %>" placeholder="Oda başlığı"
+                maxlength="80" />
+            </div>
+
+            <!-- TEMA -->
+            <div class="study-room__row" style="margin-top: 10px">
+              <select class="study-room__input" name="themeKey">
+                <option value="bg1" <%=room.themeKey==="bg1" ? "selected" : "" %>>
+                  Gece Kütüphanesi
+                </option>
+                <option value="bg2" <%=room.themeKey==="bg2" ? "selected" : "" %>>
+                  Sisli Orman
+                </option>
+                <option value="bg3" <%=room.themeKey==="bg3" ? "selected" : "" %>>
+                  Yıldız Odası
+                </option>
+                <option value="bg4" <%=room.themeKey==="bg4" ? "selected" : "" %>>
+                  Loş Çalışma
+                </option>
+                <option value="bg5" <%=room.themeKey==="bg5" ? "selected" : "" %>>
+                  Kış Akşamı
+                </option>
+                <option value="bg6" <%=room.themeKey==="bg6" ? "selected" : "" %>>
+                  Aurora
+                </option>
+              </select>
+
+              <input class="study-room__input" name="themeLabel" value="<%= room.themeLabel %>" placeholder="Tema adı"
+                maxlength="60" />
+            </div>
+
+            <!-- ZAMAN AYARLARI -->
+            <div class="stats-row">
+              <div class="stat">
+                <div class="stat__label">Odak (dk)</div>
+                <input class="study-room__input" type="number" name="focusMinutes" min="5" max="180"
+                  value="<%= room.focusMinutes %>" />
+              </div>
+
+              <div class="stat">
+                <div class="stat__label">Kısa mola (dk)</div>
+                <input class="study-room__input" type="number" name="shortBreakMinutes" min="1" max="60"
+                  value="<%= room.shortBreakMinutes %>" />
+              </div>
+
+              <div class="stat">
+                <div class="stat__label">Uzun mola (dk)</div>
+                <input class="study-room__input" type="number" name="longBreakMinutes" min="1" max="120"
+                  value="<%= room.longBreakMinutes %>" />
+              </div>
+
+              <div class="stat">
+                <div class="stat__label">Oturum sayısı</div>
+                <input class="study-room__input" type="number" name="sessionsCount" min="1" max="24"
+                  value="<%= room.sessionsCount %>" />
+              </div>
+            </div>
+
+            <!-- KİLİT -->
+            <div class="study-room__row" style="margin-top: 10px">
+              <label class="badge" style="cursor:pointer;">
+                <input type="checkbox" name="isLocked" style="margin-right: 8px" <%=room.isLocked ? "checked" : "" %>
+                />
+                Oda kilitli
+              </label>
+
+              <button class="btn-primary" type="submit">
+                Kaydet
+              </button>
+            </div>
+
+            <p class="study-room__hint" id="settingsStatus"></p>
+
+            <p class="study-room__hint">
+              Bu panel sadece oda kurucusuna görünür.
+            </p>
+          </form>
+        </details>
+      </div>
+      <% } %>
+
+
+        <script>
+          window.MINDSHIRE_ROOM = {
+            type: "community",
+            id: "<%= room._id %>",
+          };
+        </script>
+
+        <script>
+          window.MINDSHIRE_USER = {
+            id: "<%= user._id %>",
+            name: "<%= (user.username || user.name || 'Kullanıcı').replace(/\"/g,'') %>",
+            avatarUrl: "<%= user.avatar || '/img/avatars/default.png' %>",
+            isHost: <%= isHost? 'true': 'false' %>
+              };
+        </script>
+
+        <script>
+          window.MINDSHIRE_ROOM_ANNOUNCEMENT = <%= room.announcement ? JSON.stringify(room.announcement) : 'null' %>;
+        </script>
+
+        <script>
+          (function () {
+            const themeKey = "<%= room.themeKey %>"; // bg1, bg2, ...
+            if (!themeKey) return;
+
+            const url = `/img/studybg/${themeKey}.png`;
+
+            document.body.style.backgroundImage = `url('${url}')`;
+            document.body.style.backgroundSize = "cover";
+            document.body.style.backgroundPosition = "center";
+            document.body.style.backgroundAttachment = "fixed";
+          })();
+        </script>
+
+        <!-- Socket.IO Scripts -->
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/js/community-presence.js"></script>
+        <script src="/js/community-settings.js"></script>
+        <script src="/js/community-announcement.js"></script>
+        <script src="/js/pomodoro.js"></script>
+  </div>
+</section>

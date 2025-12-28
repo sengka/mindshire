@@ -1,0 +1,104 @@
+<div class="fixed-background"></div>
+
+<section class="stats-page">
+    <div class="stats-container">
+        <div class="stats-header">
+            <h1 class="stats-title">🔥 Streak İstatistikleri</h1>
+            <p class="stats-subtitle">Aralıksız çalışma serilerin ve aktivite takvimin</p>
+        </div>
+
+        <!-- Streak Kartları -->
+        <div class="streak-cards">
+            <div class="streak-card streak-current">
+                <div class="streak-icon">🔥</div>
+                <div class="streak-value">
+                    <%= currentStreak %>
+                </div>
+                <div class="streak-label">Mevcut Streak</div>
+                <div class="streak-note">Ardışık çalışma günü</div>
+            </div>
+
+            <div class="streak-card streak-longest">
+                <div class="streak-icon">🏆</div>
+                <div class="streak-value">
+                    <%= longestStreak %>
+                </div>
+                <div class="streak-label">En Uzun Streak</div>
+                <div class="streak-note">Rekor performans</div>
+            </div>
+        </div>
+
+        <!-- Motivasyon Mesajı -->
+        <div class="streak-motivation">
+            <% if (currentStreak===0) { %>
+                <p>💪 Bugün çalışmaya başla ve streak'ini oluştur!</p>
+                <% } else if (currentStreak < 7) { %>
+                    <p>🌟 Harika gidiyorsun! <%= 7 - currentStreak %> gün daha ve 1 haftalık streak'e ulaşacaksın!</p>
+                    <% } else if (currentStreak < 30) { %>
+                        <p>🚀 Muhteşem! <%= 30 - currentStreak %> gün daha ve 1 aylık streak'e ulaşacaksın!</p>
+                        <% } else { %>
+                            <p>👑 Efsanesin! <%= currentStreak %> günlük streak'in var!</p>
+                            <% } %>
+        </div>
+
+        <!-- Aylık Aktivite Takvimi -->
+        <div class="stats-section">
+            <h2>📅 <%= currentMonth %> Aktivite Takvimi</h2>
+            <div class="activity-calendar">
+                <% monthActivity.forEach(day=> { %>
+                    <div class="calendar-day <%= day.hasActivity ? 'has-activity' : 'no-activity' %>"
+                        title="<%= day.date.toLocaleDateString('tr-TR') %>: <%= day.sessions %> seans, <%= day.tasks %> görev, <%= day.minutes %> dk">
+                        <div class="day-number">
+                            <%= day.day %>
+                        </div>
+                        <div class="day-name">
+                            <%= day.dayName %>
+                        </div>
+                        <% if (day.hasActivity) { %>
+                            <div class="activity-indicator">
+                                <% if (day.minutes> 120) { %>
+                                    <span class="activity-level-high">●</span>
+                                    <% } else if (day.minutes> 60) { %>
+                                        <span class="activity-level-medium">●</span>
+                                        <% } else { %>
+                                            <span class="activity-level-low">●</span>
+                                            <% } %>
+                            </div>
+                            <% } %>
+                    </div>
+                    <% }) %>
+            </div>
+
+            <div class="calendar-legend">
+                <span class="legend-item">
+                    <span class="activity-level-low">●</span> 1-60 dk
+                </span>
+                <span class="legend-item">
+                    <span class="activity-level-medium">●</span> 61-120 dk
+                </span>
+                <span class="legend-item">
+                    <span class="activity-level-high">●</span> 120+ dk
+                </span>
+                <span class="legend-item">
+                    <span class="no-activity-dot">○</span> Çalışma yok
+                </span>
+            </div>
+        </div>
+
+        <!-- İpuçları -->
+        <div class="streak-tips">
+            <h3>💡 Streak İpuçları</h3>
+            <ul>
+                <li>Her gün en az 1 pomodoro tamamla veya 1 görev bitir</li>
+                <li>Streak'ini korumak için düzenli çalış</li>
+                <li>Hafta sonları da küçük hedefler koy</li>
+                <li>Streak kırılırsa üzülme, yeniden başla!</li>
+            </ul>
+        </div>
+
+        <!-- Geri Dön -->
+        <div class="stats-back">
+            <a href="/stats" class="btn-secondary">← Genel İstatistiklere Dön</a>
+        </div>
+    </div>
+</section>

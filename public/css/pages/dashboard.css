@@ -1,0 +1,357 @@
+/* =========================================
+   DASHBOARD İÇERİK ALANI
+   ========================================= */
+
+.fixed-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    /* public/img/bg-dashboard.png */
+    background: url('/img/bg-dashboard.png') no-repeat center center;
+    background-size: cover;
+
+    filter: blur(8px) brightness(0.7);  /* büyülü blur + biraz karartma */
+    transform: scale(1.06);             /* kenarlarda boşluk kalmasın */
+    z-index: -1;                        /* her şeyin arkasında dursun */
+}
+
+   .dashboard-page {
+    max-width: 1200px;
+    margin: 40px auto 60px auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+    color: var(--text-main);
+}
+
+/* Üst karşılama */
+
+.dashboard-hero {
+    display: flex;
+    gap: 30px;
+    align-items: stretch;
+    margin-bottom: 35px;
+}
+
+.dashboard-hero-text {
+    flex: 2;
+}
+
+.dashboard-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.6rem;
+    color: #f0e6d2;
+    margin-bottom: 10px;
+}
+
+.dashboard-title span {
+    color: var(--gold);
+}
+
+.dashboard-subtitle {
+    font-size: 1rem;
+    color: #cfd8dc;
+    margin-bottom: 15px;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.hero-tag {
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(0,0,0,0.25);
+    font-size: 0.8rem;
+}
+
+/* Hızlı istatistik kartları */
+
+.dashboard-quick-stats {
+    flex: 1.4;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.quick-card {
+    background: rgba(10, 5, 20, 0.8);
+    border-radius: 18px;
+    padding: 14px 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.quick-label {
+    font-size: 0.8rem;
+    color: #b0bec5;
+    margin-bottom: 4px;
+}
+
+.quick-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.quick-note {
+    font-size: 0.8rem;
+    color: #90a4ae;
+}
+
+/* Ana grid */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1.1fr 1.1fr;
+    gap: 24px;
+}
+
+/* Paneller */
+
+.dash-panel {
+    background: rgba(10, 5, 20, 0.82);
+    border-radius: 20px;
+    padding: 18px 20px 20px 20px;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.65);
+    backdrop-filter: blur(14px);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+}
+
+.panel-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: #f0e6d2;
+}
+
+.panel-link {
+    font-size: 0.85rem;
+    color: var(--gold);
+    text-decoration: none;
+    opacity: 0.8;
+}
+
+.panel-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.panel-note {
+    font-size: 0.8rem;
+    color: #b0bec5;
+}
+
+/* Görev listesi */
+
+.task-list {
+    list-style: none;
+    margin: 10px 0 16px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.task-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    background: linear-gradient(135deg, var(--gold), #ffb74d);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+}
+
+.task-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.task-title {
+    font-size: 0.95rem;
+    color: #eceff1;
+}
+
+.task-meta {
+    font-size: 0.8rem;
+    color: #b0bec5;
+}
+
+/* Butonlar */
+
+.btn-dashboard-primary {
+    margin-top: 6px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--gold);
+    background: linear-gradient(45deg, rgba(255,219,88,0.1), rgba(255,183,77,0.2));
+    color: var(--gold);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn-dashboard-primary:hover {
+    background: linear-gradient(45deg, var(--gold), #ffb300);
+    color: #1a0f00;
+    box-shadow: 0 0 18px rgba(255, 219, 88, 0.6);
+}
+
+.btn-dashboard-ghost {
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.18);
+    background: transparent;
+    color: #cfd8dc;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.btn-dashboard-ghost:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+/* Odak modu */
+
+.focus-timer {
+    text-align: center;
+    margin: 12px 0;
+}
+
+.focus-time {
+    font-size: 2.6rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+    color: #f0e6d2;
+}
+
+.focus-label {
+    font-size: 0.9rem;
+    color: #b0bec5;
+    margin-bottom: 14px;
+}
+
+.focus-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.focus-footer {
+    margin-top: 14px;
+    font-size: 0.8rem;
+    color: #90a4ae;
+}
+
+/* Yaklaşanlar + ilerleme */
+
+.upcoming-list {
+    list-style: none;
+    margin: 10px 0 16px 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upcoming-item {
+    display: flex;
+    gap: 10px;
+}
+
+.upcoming-date {
+    min-width: 52px;
+    text-align: center;
+    border-radius: 14px;
+    padding: 6px 8px;
+    background: rgba(255,255,255,0.06);
+    font-size: 0.85rem;
+    color: #f0e6d2;
+}
+
+.upcoming-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.upcoming-title {
+    font-size: 0.9rem;
+    color: #eceff1;
+}
+
+.upcoming-meta {
+    font-size: 0.8rem;
+    color: #b0bec5;
+}
+
+.panel-divider {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin: 10px 0 12px 0;
+}
+
+.progress-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.85rem;
+}
+
+.progress-row {
+    display: flex;
+    justify-content: space-between;
+}
+/* Dashboard – tamamlanan görev */
+.task-item.is-done {
+  opacity: 0.55;
+}
+
+.task-item.is-done .task-title {
+  text-decoration: line-through;
+}
+
+.task-item.is-done .task-dot {
+  background: rgba(255, 215, 0, 0.4);
+}
+
+.task-done-label {
+  margin-left: 6px;
+  font-size: 0.8rem;
+  color: var(--gold);
+  opacity: 0.8;
+}
+
+
+/* Mobil uyum */
+
+@media (max-width: 992px) {
+    .dashboard-hero {
+        flex-direction: column;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}

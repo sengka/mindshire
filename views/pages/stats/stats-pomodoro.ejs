@@ -1,0 +1,103 @@
+<div class="fixed-background"></div>
+
+<section class="stats-page">
+    <div class="stats-container">
+        <div class="stats-header">
+            <h1 class="stats-title">🍅 Pomodoro Geçmişi</h1>
+            <p class="stats-subtitle">Tüm odak seanslarının detaylı kaydı</p>
+        </div>
+
+        <!-- Filtreleme -->
+        <div class="stats-filters">
+            <form method="GET" action="/stats/pomodoro" class="filter-form">
+                <div class="filter-group">
+                    <label>Mod:</label>
+                    <select name="mode" class="filter-select">
+                        <option value="all" <%=filters.mode==='all' ? 'selected' : '' %>>Tümü</option>
+                        <option value="work" <%=filters.mode==='work' ? 'selected' : '' %>>🍅 Odak</option>
+                        <option value="short" <%=filters.mode==='short' ? 'selected' : '' %>>☕ Kısa Mola</option>
+                        <option value="long" <%=filters.mode==='long' ? 'selected' : '' %>>🌙 Uzun Mola</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Başlangıç:</label>
+                    <input type="date" name="startDate" value="<%= filters.startDate %>" class="filter-input">
+                </div>
+
+                <div class="filter-group">
+                    <label>Bitiş:</label>
+                    <input type="date" name="endDate" value="<%= filters.endDate %>" class="filter-input">
+                </div>
+
+                <button type="submit" class="btn-primary">Filtrele</button>
+                <a href="/stats/pomodoro" class="btn-secondary">Temizle</a>
+            </form>
+        </div>
+
+        <!-- Pomodoro Tablosu -->
+        <div class="stats-section">
+            <% if (sessions && sessions.length> 0) { %>
+                <div class="pomodoro-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>
+                                <th>Mod</th>
+                                <th>Planlanan</th>
+                                <th>Gerçekleşen</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% sessions.forEach(session=> { %>
+                                <tr>
+                                    <td>
+                                        <%= session.startedAtFormatted %>
+                                    </td>
+                                    <td>
+                                        <%= session.modeLabel %>
+                                    </td>
+                                    <td>
+                                        <%= session.plannedMinutes %> dk
+                                    </td>
+                                    <td>
+                                        <%= session.duration %>
+                                    </td>
+                                    <td><span class="status-badge status-<%= session.status %>">
+                                            <%= session.statusLabel %>
+                                        </span></td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Sayfalama -->
+                <div class="pagination">
+                    <% if (pagination.hasPrev) { %>
+                        <a href="/stats/pomodoro?page=<%= pagination.currentPage - 1 %>&mode=<%= filters.mode %>&startDate=<%= filters.startDate %>&endDate=<%= filters.endDate %>"
+                            class="btn-secondary">← Önceki</a>
+                        <% } %>
+
+                            <span class="pagination-info">
+                                Sayfa <%= pagination.currentPage %> / <%= pagination.totalPages %>
+                                        (Toplam: <%= pagination.totalSessions %> seans)
+                            </span>
+
+                            <% if (pagination.hasNext) { %>
+                                <a href="/stats/pomodoro?page=<%= pagination.currentPage + 1 %>&mode=<%= filters.mode %>&startDate=<%= filters.startDate %>&endDate=<%= filters.endDate %>"
+                                    class="btn-secondary">Sonraki →</a>
+                                <% } %>
+                </div>
+                <% } else { %>
+                    <p class="empty-state">Henüz pomodoro kaydı yok. Çalışmaya başla!</p>
+                    <% } %>
+        </div>
+
+        <!-- Geri Dön -->
+        <div class="stats-back">
+            <a href="/stats" class="btn-secondary">← Genel İstatistiklere Dön</a>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,25 @@
+/* responsive.css */
+/* RESPONSIVE (Mobil Ayarlar) */
+
+@media (max-width: 768px) {
+    .magical-title,
+    .welcome-content .magical-title {
+        font-size: 3rem;
+    }
+
+    .input-section {
+        grid-template-columns: 1fr;
+    }
+
+    .full-row {
+        grid-column: span 1;
+    }
+
+    .btn-magic {
+        width: 100%;
+    }
+
+    .discover-page {
+        padding: 1rem;
+    }
+}

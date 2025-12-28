@@ -1,0 +1,192 @@
+<div class="fixed-background"></div>
+
+<main class="dashboard-page">
+  <!-- ÜST KARŞILAMA BLOĞU -->
+  <section class="dashboard-hero">
+    <div class="dashboard-hero-text">
+      <h1 class="dashboard-title">
+        Tekrar hoş geldin, <span>
+          <%= user.username %>
+        </span>!
+      </h1>
+      <p class="dashboard-subtitle">
+        Asanı hazırla, bugün hangi büyü üzerinde çalışacağız?
+      </p>
+
+      <div class="hero-tags">
+        <span class="hero-tag">📚 Odaklı çalışma</span>
+        <span class="hero-tag">⏳ Küçük adımlar, büyük büyüler</span>
+        <span class="hero-tag">✨ İlerleme her gün bir parça</span>
+      </div>
+    </div>
+
+    <% const doneToday=user.dashboard?.completedTasksToday ?? 0; const totalToday=user.dashboard?.totalTasksToday ?? 0;
+      %>
+
+      <div class="dashboard-quick-stats">
+        <div class="quick-card">
+          <div class="quick-label">Bugünkü görev</div>
+          <div class="quick-value">
+            <%= doneToday %> / <%= totalToday %>
+          </div>
+          <div class="quick-note">Tamamlanan görev sayısı</div>
+        </div>
+
+        <!-- Pomodoro/Streak şimdilik dummy kalsın -->
+        <div class="quick-card">
+          <div class="quick-label">Toplam Pomodoro</div>
+          <div class="quick-value">
+            <%= stats.todayPomodoros || 0 %>
+          </div>
+          <div class="quick-note">Bugünkü odak seansı</div>
+        </div>
+        <div class="quick-card">
+          <div class="quick-label">Streak</div>
+          <div class="quick-value">
+            <%= stats.currentStreak || 0 %> gün
+          </div>
+          <div class="quick-note">Aralıksız çalışma serisi</div>
+        </div>
+      </div>
+  </section>
+
+  <!-- ANA GRID -->
+  <section class="dashboard-grid">
+    <!-- Sol sütun: Bugünkü görevler -->
+    <div class="dash-panel panel-today">
+      <div class="panel-header">
+        <h2>Bugünkü Görevler</h2>
+        <a href="/todo" class="panel-link">Tümünü gör →</a>
+      </div>
+
+      <ul class="task-list">
+        <% if (user.dashboard?.todaysTasks && user.dashboard.todaysTasks.length) { %>
+          <% user.dashboard.todaysTasks.forEach(t=> { %>
+            <li class="task-item <%= t.isCompleted ? 'is-done' : '' %>">
+              <span class="task-dot"></span>
+
+              <div class="task-text">
+                <span class="task-title">
+                  <%= t.title %>
+                    <% if (t.isCompleted) { %>
+                      <span class="task-done-label">✓</span>
+                      <% } %>
+                </span>
+
+                <span class="task-meta">
+                  ⏱ <%= t.duration %> dk · <%= t.category %>
+                </span>
+              </div>
+            </li>
+            <% }) %>
+              <% } else { %>
+                <li class="task-item">
+                  <span class="task-dot"></span>
+                  <div class="task-text">
+                    <span class="task-title">Bugün için görev yok ✨</span>
+                    <span class="task-meta">To-Do sayfasından ekleyebilirsin</span>
+                  </div>
+                </li>
+                <% } %>
+      </ul>
+
+      <button class="btn-dashboard-primary" onclick="window.location.href='/todo'">
+        + Yeni görev ekle
+      </button>
+    </div>
+
+    <!-- Orta sütun: Pomodoro / Odak modu -->
+    <div class="dash-panel panel-focus" onclick="window.location.href='/study-room/personal'" style="cursor: pointer;">
+      <div class="panel-header">
+        <h2>Odak Modu</h2>
+        <span class="panel-note">Pomodoro ile küçük büyüler yap</span>
+      </div>
+
+      <div class="focus-timer">
+        <div class="focus-time">25:00</div>
+        <div class="focus-label">Bir sonraki odak turu</div>
+        <div class="focus-buttons">
+          <button class="btn-dashboard-primary"
+            onclick="event.stopPropagation(); window.location.href='/study-room/personal'">Başlat</button>
+          <button class="btn-dashboard-ghost"
+            onclick="event.stopPropagation(); window.location.href='/study-room/personal'">Kısa mola</button>
+          <button class="btn-dashboard-ghost"
+            onclick="event.stopPropagation(); window.location.href='/study-room/personal'">Uzun mola</button>
+        </div>
+      </div>
+
+      <div class="focus-footer">
+        <span>🔔 Hatırlatma: Çalışma odanı sessize al, suyun yanında olsun.</span>
+      </div>
+    </div>
+
+    <!-- Sağ sütun: Takvim + İstatistik önizlemesi -->
+    <div class="dash-panel panel-side">
+      <div class="panel-header">
+        <h2>Yaklaşanlar</h2>
+        <a href="/calendar" class="panel-link">Takvimi aç →</a>
+      </div>
+
+      <ul class="upcoming-list">
+        <% if (typeof upcomingEvents !=='undefined' && upcomingEvents && upcomingEvents.length> 0) { %>
+          <% upcomingEvents.forEach(function(event) { %>
+            <% var eventDate=new Date(event.date); var day=eventDate.getDate(); var monthNames=['Oca', 'Şub' , 'Mar'
+              , 'Nis' , 'May' , 'Haz' , 'Tem' , 'Ağu' , 'Eyl' , 'Eki' , 'Kas' , 'Ara' ]; var
+              month=monthNames[eventDate.getMonth()]; var icon='📅' ; if (event.type==='exam' ) { icon='📝' ; } else if
+              (event.type==='deadline' ) { icon='⏰' ; } else if (event.type==='reminder' ) { icon='🔔' ; } var meta='' ;
+              if (event.time) meta +=icon + ' ' + event.time; if (event.location) meta +=(meta ? ' · ' : '' ) + '📍 ' +
+              event.location; if (!meta) meta=icon + ' Tüm gün' ; %>
+              <li class="upcoming-item">
+                <span class="upcoming-date">
+                  <%= day %>
+                    <%= month %>
+                </span>
+                <div class="upcoming-text">
+                  <span class="upcoming-title">
+                    <%= event.title %>
+                  </span>
+                  <span class="upcoming-meta"><%- meta %></span>
+                </div>
+              </li>
+              <% }); %>
+                <% } else { %>
+                  <li class="upcoming-item">
+                    <span class="upcoming-date">--</span>
+                    <div class="upcoming-text">
+                      <span class="upcoming-title">Yaklaşan etkinlik yok</span>
+                      <span class="upcoming-meta">Takvimden yeni etkinlik ekleyebilirsin</span>
+                    </div>
+                  </li>
+                  <% } %>
+      </ul>
+
+      <div class="panel-divider"></div>
+
+      <div class="panel-header">
+        <h2>İlerleme Özeti</h2>
+        <a href="/stats" class="panel-link">Detaylı istatistik →</a>
+      </div>
+
+      <div class="progress-summary">
+        <div class="progress-row">
+          <span>Bu hafta çalışma süresi</span>
+          <span>
+            <%= stats.weeklyDuration || '0 dk' %>
+          </span>
+        </div>
+        <div class="progress-row">
+          <span>Tamamlanan görev</span>
+          <span>
+            <%= stats.weeklyTasks || 0 %> görev
+          </span>
+        </div>
+        <div class="progress-row">
+          <span>En aktif ders</span>
+          <span>
+            <%= stats.topCategory || 'Henüz yok' %>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

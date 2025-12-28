@@ -1,0 +1,107 @@
+/* === Mindshire Footer === */
+
+.magic-footer {
+    background: rgba(10, 10, 20, 0.98);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 32px 0 18px 0;
+    margin-top: auto; /* body flex-column ise alta yapışır */
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr;
+    gap: 32px;
+}
+
+.footer-col {
+    min-width: 0;
+}
+
+.footer-brand .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1.8rem;
+    color: var(--gold);
+    margin-bottom: 8px;
+    text-shadow: 0 0 12px rgba(0,0,0,0.6),
+                 0 0 18px rgba(255, 215, 0, 0.35);
+}
+
+.footer-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 260px;
+}
+
+/* Başlıklar */
+.footer-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #f5e6c5;
+}
+
+/* Link listeleri */
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li + li {
+    margin-top: 4px;
+}
+
+.footer-links a {
+    color: #cfd8dc;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--gold);
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.35);
+    padding-left: 4px;
+}
+
+/* Alt bar */
+.footer-bottom {
+    max-width: 1200px;
+    margin: 18px auto 0 auto;
+    padding: 10px 24px 0 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.footer-mini-text {
+    opacity: 0.85;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .footer-inner {
+        grid-template-columns: 1fr 1fr;
+        row-gap: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer-inner {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

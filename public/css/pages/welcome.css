@@ -1,0 +1,137 @@
+/* pages/welcome.css */
+/* SAYFA: KARŞILAMA (Welcome) */
+
+.welcome-hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Arka plan Blur */
+.welcome-hero::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+    background-image: url('/img/wizardlibrary.jpg');
+    background-size: cover;
+    background-position: center center;
+    filter: blur(8px) brightness(0.7);
+    z-index: -2;
+}
+
+.welcome-content {
+    text-align: center;
+    padding: 3.5rem;
+    max-width: 900px;
+    width: 90%;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+}
+
+.welcome-content .magical-title {
+    font-size: 4.5rem;
+}
+/* Küçük üst badge */
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.6);
+}
+
+.badge-icon {
+    font-size: 1.1rem;
+}
+
+.badge-text {
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+}
+
+/* Highlight satiri */
+.welcome-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 2.5rem;
+}
+
+.highlight-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.9rem;
+    color: #d7ccc8;
+}
+
+.highlight-icon {
+    font-size: 1rem;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.4));
+}
+
+.welcome-hint {
+    margin-top: 2.2rem;
+    font-size: 0.95rem;
+    color: #cfd8dc;
+    opacity: 0.9;
+}
+
+/* Küçük responsive dokunuş */
+@media (max-width: 768px) {
+    .welcome-content {
+        padding: 2.2rem;
+    }
+
+    .welcome-highlights {
+        gap: 8px;
+    }
+
+    .highlight-item {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+}
+/* Daha temiz bir görünüm için ekstra spacing */
+.welcome-clean {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+/* Butonların aralığını artırıp daha estetik yapıyoruz */
+.clean-buttons a {
+    margin: 10px 0;
+    width: 80%;
+    max-width: 500px;
+}
+
+/* Alt metin */
+.welcome-footer-text {
+    margin-top: 3rem;
+    font-size: 1rem;
+    color: #d9d9d9;
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+}

@@ -1,0 +1,51 @@
+<div class="welcome-hero">
+  <div class="welcome-content register-container" style="max-width: 500px">
+    <header class="register-header">
+      <h1 class="magical-title">Akademiye Giriş</h1>
+      <p class="magical-subtitle">BÜYÜLÜ DÜNYAYA GERİ DÖN</p>
+    </header>
+
+    <div class="login-redirect-top">
+      Henüz bir parşömenin yok mu?
+      <a href="/kayit">Kayıt Ol</a>
+    </div>
+
+    <form action="/giris" method="POST" class="magic-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div style="margin-bottom: 20px">
+        <div class="form-group magic-field" style="margin-bottom: 20px">
+          <span class="input-icon">📧</span>
+          <input type="email" name="email" class="magic-input" placeholder="E-Posta Adresi" required />
+        </div>
+
+        <div class="form-group magic-field">
+          <span class="input-icon">🔒</span>
+          <input type="password" name="password" class="magic-input" id="inp-pass" placeholder="Gizli Şifre" required />
+          <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        </div>
+
+        <div style="text-align: right; margin-top: 10px">
+          <a href="/sifremi-unuttum" style="color: #aaa; font-size: 0.85rem; font-style: italic">Şifreni mi unuttun?</a>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-magic btn-login">
+        <span class="icon">📜</span> PORTALDAN GEÇ
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function togglePassword() {
+    const input = document.getElementById("inp-pass");
+    const icon = document.querySelector(".toggle-password");
+    if (input.type === "password") {
+      input.type = "text";
+      icon.textContent = "🙈";
+    } else {
+      input.type = "password";
+      icon.textContent = "👁️";
+    }
+  }
+</script>

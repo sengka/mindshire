@@ -1,0 +1,115 @@
+<header class="magic-header">
+  <div class="header-container">
+    <a href="<%= (typeof user != 'undefined' && user) ? '/dashboard' : '/' %>" class="logo-area">
+      <span class="logo-text">Mindshire</span>
+    </a>
+
+    <% if (typeof user !='undefined' && user) { %>
+
+      <nav class="main-nav">
+        <!-- Çalışma Odası -->
+        <div class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-trigger">Çalışma Odası ▾ </a>
+          <div class="dropdown-menu">
+            <a href="/study-room/personal">Kişisel Oda</a>
+            <a href="/study-room/community">Topluluk Odası</a>
+          </div>
+        </div>
+
+        <!-- Düz linkler -->
+        <a href="/calendar" class="nav-link"> Takvim </a>
+        <a href="/todo" class="nav-link"> To-Do </a>
+        <a href="/courses" class="nav-link"> Dersler </a>
+
+        <!-- İstatistikler dropdown -->
+        <div class="nav-item dropdown">
+          <a href="/stats" class="nav-link dropdown-trigger"> İstatistikler ▾ </a>
+
+          <div class="dropdown-menu stats-menu">
+            <a href="/stats"> Genel İstatistikler</a>
+            <a href="/stats/pomodoro"> Pomodoro geçmişi</a>
+            <a href="/stats/weekly"> Haftalık grafikler</a>
+            <a href="/stats/streaks"> Streak görünümü</a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="header-right">
+        <!-- XP & Level widget YERİNDE KALIYOR -->
+        <div class="stats-widget">
+          <div class="level-circle">
+            <span>
+              <%= (user.stats && user.stats.level) ? user.stats.level : 1 %>
+            </span>
+            <small>LVL</small>
+          </div>
+          <div class="xp-info">
+            <% let currentXp=(user.stats && user.stats.xp) ? user.stats.xp : 0; let xpPercent=(currentXp / 1000) * 100;
+              %>
+              <div class="xp-bar-bg">
+                <div class="xp-bar-fill" style="width: <%= xpPercent %>%"></div>
+              </div>
+              <span class="xp-text">
+                <%= currentXp %> / 1000 XP
+              </span>
+          </div>
+        </div>
+
+        <div class="profile-area">
+          <span class="username">
+            <%= user.username %>
+          </span>
+          <img src="<%= user.avatar ? user.avatar : '/img/default-wizard.png' %>" class="user-avatar" />
+          <div class="profile-dropdown">
+            <a href="/profile">Profilim</a>
+            <a href="/settings">Ayarlar</a>
+            <form method="POST" action="/logout" id="logoutForm" style="display: none;">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            </form>
+            <a href="#" class="logout-link">Çıkış</a>
+          </div>
+        </div>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const logoutBtn = document.querySelector(".logout-link");
+
+          if (logoutBtn) {
+            logoutBtn.addEventListener("click", function (e) {
+              e.preventDefault(); // Linkin direkt gitmesini engelle
+
+              Swal.fire({
+                title: "Ayrılıyor musun?",
+                text: "Seni tekrar görmek için sabırsızlanıyoruz!",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#ff7675", // CSS'indeki kırmızı renk
+                cancelButtonColor: "#6c5ce7", // CSS'indeki mor tonu
+                confirmButtonText: "Evet, çıkış yap",
+                cancelButtonText: "Vazgeçtim",
+                background: "#151521", // Senin koyu arka plan rengin
+                color: "#e0e0e0", // Yazı rengi
+                iconColor: "#ffdb58", // Altın sarısı ikon
+                customClass: {
+                  popup: "magical-popup", // İstersen özel CSS yazabilirsin
+                },
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  // Onay verilirse formu gönder
+                  document.getElementById('logoutForm').submit();
+                }
+              });
+            });
+          }
+        });
+      </script>
+
+      <% } else { %>
+
+        <div class="header-auth-actions"></div>
+
+        <% } %>
+  </div>
+</header>

@@ -1,0 +1,534 @@
+<div class="fixed-background"></div>
+
+<main class="settings-page">
+    <!-- SETTINGS HEADER -->
+    <section class="settings-hero">
+        <h1 class="settings-title">Ayarlar</h1>
+        <p class="settings-subtitle">Hesap bilgilerini ve güvenlik ayarlarını yönet</p>
+    </section>
+
+    <!-- ACCOUNT SETTINGS -->
+    <section class="settings-section">
+        <div class="section-header">
+            <h2>Hesap Bilgileri</h2>
+            <p class="section-subtitle">Kullanıcı adını güncelle</p>
+        </div>
+
+        <form id="usernameForm" class="settings-form">
+            <div class="form-group">
+                <label for="username">Kullanıcı Adı</label>
+                <input type="text" id="username" name="username" value="<%= user.username %>" required minlength="3">
+            </div>
+            <button type="submit" class="btn-primary">Kullanıcı Adını Güncelle</button>
+        </form>
+    </section>
+
+    <!-- SECURITY SETTINGS -->
+    <section class="settings-section">
+        <div class="section-header">
+            <h2>Güvenlik</h2>
+            <p class="section-subtitle">Şifreni değiştir</p>
+        </div>
+
+        <form id="passwordForm" class="settings-form">
+            <div class="form-group">
+                <label for="currentPassword">Mevcut Şifre</label>
+                <input type="password" id="currentPassword" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+                <label for="newPassword">Yeni Şifre</label>
+                <input type="password" id="newPassword" name="newPassword" required minlength="8">
+                <small class="form-hint">En az 8 karakter ve bir özel karakter içermelidir</small>
+            </div>
+            <div class="form-group">
+                <label for="confirmNewPassword">Yeni Şifre (Tekrar)</label>
+                <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+            </div>
+            <button type="submit" class="btn-primary">Şifreyi Değiştir</button>
+        </form>
+    </section>
+
+    <!-- SESSION -->
+    <section class="settings-section">
+        <div class="section-header">
+            <h2>Oturum</h2>
+            <p class="section-subtitle">Hesabından çıkış yap</p>
+        </div>
+
+        <div class="settings-form">
+            <p class="logout-info">Çıkış yapmak için aşağıdaki butona tıklayın. Tekrar giriş yapmak için kullanıcı adı
+                ve şifreniz gerekecektir.</p>
+            <form method="POST" action="/logout" id="settingsLogoutForm" style="display: inline;">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="button" class="btn-ghost logout-link">Çıkış Yap</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- DANGER ZONE -->
+    <section class="settings-section danger-zone">
+        <div class="section-header">
+            <h2>⚠️ Tehlikeli Bölge</h2>
+            <p class="section-subtitle">Bu işlemler geri alınamaz</p>
+        </div>
+
+        <div class="danger-content">
+            <div class="danger-info">
+                <h3>Hesabı Sil</h3>
+                <p>Hesabınızı kalıcı olarak silmek, tüm verilerinizin (görevler, pomodoro seansları, takvim
+                    etkinlikleri) silinmesi anlamına gelir. Bu işlem geri alınamaz.</p>
+            </div>
+            <button id="deleteAccountBtn" class="btn-danger">Hesabımı Sil</button>
+        </div>
+    </section>
+</main>
+
+<style>
+    .settings-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .settings-hero {
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .settings-title {
+        font-size: 3rem;
+        color: #ffdb58;
+        margin-bottom: 0.5rem;
+        font-family: 'Cormorant Garamond', serif;
+    }
+
+    .settings-subtitle {
+        color: #a0a0a0;
+        font-size: 1.125rem;
+    }
+
+    .settings-section {
+        background: rgba(30, 30, 40, 0.6);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .section-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .section-header h2 {
+        font-size: 1.5rem;
+        color: #6c5ce7;
+        margin-bottom: 0.5rem;
+        font-family: 'Cormorant Garamond', serif;
+    }
+
+    .section-subtitle {
+        color: #a0a0a0;
+        font-size: 0.875rem;
+    }
+
+    .settings-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-group label {
+        color: #e0e0e0;
+        font-weight: 600;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-group input {
+        padding: 0.875rem 1rem;
+        border-radius: 8px;
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        background: rgba(20, 20, 30, 0.5);
+        color: #e0e0e0;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #6c5ce7;
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+
+    .form-hint {
+        color: #a0a0a0;
+        font-size: 0.75rem;
+    }
+
+    .btn-primary,
+    .btn-ghost,
+    .btn-danger {
+        padding: 0.875rem 2rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+        color: white;
+        align-self: flex-start;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(108, 92, 231, 0.4);
+    }
+
+    .btn-ghost {
+        background: transparent;
+        border: 2px solid #6c5ce7;
+        color: #6c5ce7;
+    }
+
+    .btn-ghost:hover {
+        background: rgba(108, 92, 231, 0.1);
+    }
+
+    .logout-info {
+        color: #a0a0a0;
+        margin-bottom: 1rem;
+        line-height: 1.6;
+    }
+
+    .logout-link {
+        align-self: flex-start;
+    }
+
+    /* Danger Zone */
+    .danger-zone {
+        border-color: rgba(255, 118, 117, 0.3);
+        background: rgba(40, 20, 20, 0.4);
+    }
+
+    .danger-zone .section-header h2 {
+        color: #ff7675;
+    }
+
+    .danger-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .danger-info h3 {
+        color: #ff7675;
+        margin-bottom: 0.5rem;
+        font-size: 1.125rem;
+    }
+
+    .danger-info p {
+        color: #e0e0e0;
+        line-height: 1.6;
+        font-size: 0.875rem;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #ff7675, #d63031);
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 118, 117, 0.4);
+    }
+
+    @media (max-width: 768px) {
+        .danger-content {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-danger {
+            width: 100%;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // Username Form
+        const usernameForm = document.getElementById('usernameForm');
+        usernameForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+
+            if (username.length < 3) {
+                Swal.fire({
+                    title: 'Hata!',
+                    text: 'Kullanıcı adı en az 3 karakter olmalıdır',
+                    icon: 'error',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    confirmButtonColor: '#ff7675'
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users/me', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ username })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await Swal.fire({
+                        title: 'Başarılı!',
+                        text: 'Kullanıcı adı güncellendi',
+                        icon: 'success',
+                        background: '#151521',
+                        color: '#e0e0e0',
+                        confirmButtonColor: '#6c5ce7'
+                    });
+                    window.location.reload();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Kullanıcı adı güncelleme hatası:', error);
+                Swal.fire({
+                    title: 'Hata!',
+                    text: error.message || 'Bir hata oluştu',
+                    icon: 'error',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    confirmButtonColor: '#ff7675'
+                });
+            }
+        });
+
+        // Password Form
+        const passwordForm = document.getElementById('passwordForm');
+        passwordForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            // Client-side validation
+            if (newPassword !== confirmNewPassword) {
+                Swal.fire({
+                    title: 'Hata!',
+                    text: 'Yeni şifreler eşleşmiyor',
+                    icon: 'error',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    confirmButtonColor: '#ff7675'
+                });
+                return;
+            }
+
+            if (newPassword.length < 8) {
+                Swal.fire({
+                    title: 'Hata!',
+                    text: 'Yeni şifre en az 8 karakter olmalıdır',
+                    icon: 'error',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    confirmButtonColor: '#ff7675'
+                });
+                return;
+            }
+
+            const specialCharRegex = /[.?!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+            if (!specialCharRegex.test(newPassword)) {
+                Swal.fire({
+                    title: 'Hata!',
+                    text: 'Yeni şifre en az bir özel karakter içermelidir',
+                    icon: 'error',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    confirmButtonColor: '#ff7675'
+                });
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/users/me/password', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword, confirmNewPassword })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await Swal.fire({
+                        title: 'Başarılı!',
+                        text: 'Şifre değiştirildi',
+                        icon: 'success',
+                        background: '#151521',
+                        color: '#e0e0e0',
+                        confirmButtonColor: '#6c5ce7'
+                    });
+                    passwordForm.reset();
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Şifre değiştirme hatası:', error);
+                Swal.fire({
+                    title: 'Hata!',
+                    text: error.message || 'Bir hata oluştu',
+                    icon: 'error',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    confirmButtonColor: '#ff7675'
+                });
+            }
+        });
+
+        // Delete Account
+        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+        deleteAccountBtn.addEventListener('click', async function () {
+
+            // First confirmation
+            const firstConfirm = await Swal.fire({
+                title: '⚠️ Hesabı Sil',
+                html: `
+        <p style="margin-bottom: 1rem;">Bu işlem geri alınamaz. Hesabınız ve size ait tüm veriler kalıcı olarak silinecektir.</p>
+        <p style="color: #ff7675; font-weight: 600;">Devam etmek istediğinizden emin misiniz?</p>
+      `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff7675',
+                cancelButtonColor: '#6c5ce7',
+                confirmButtonText: 'Evet, sil',
+                cancelButtonText: 'İptal',
+                background: '#151521',
+                color: '#e0e0e0'
+            });
+
+            if (!firstConfirm.isConfirmed) return;
+
+            // Password confirmation
+            const { value: password } = await Swal.fire({
+                title: 'Şifrenizi Girin',
+                html: '<p style="margin-bottom: 1rem;">Hesabınızı silmek için şifrenizi girin</p>',
+                input: 'password',
+                inputPlaceholder: 'Şifreniz',
+                showCancelButton: true,
+                confirmButtonColor: '#ff7675',
+                cancelButtonColor: '#6c5ce7',
+                confirmButtonText: 'Hesabı Sil',
+                cancelButtonText: 'İptal',
+                background: '#151521',
+                color: '#e0e0e0',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Şifre gereklidir!';
+                    }
+                }
+            });
+
+            if (!password) return;
+
+            try {
+                const response = await fetch('/api/users/me', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    await Swal.fire({
+                        title: 'Hesap Silindi',
+                        text: 'Hesabınız başarıyla silindi. Yönlendiriliyorsunuz...',
+                        icon: 'success',
+                        background: '#151521',
+                        color: '#e0e0e0',
+                        confirmButtonColor: '#6c5ce7',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Redirect to home
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                console.error('Hesap silme hatası:', error);
+                Swal.fire({
+                    title: 'Hata!',
+                    text: error.message || 'Bir hata oluştu',
+                    icon: 'error',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    confirmButtonColor: '#ff7675'
+                });
+            }
+        });
+
+        // Logout link confirmation (reuse existing SweetAlert from header)
+        const logoutLink = document.querySelector('.logout-link');
+        if (logoutLink) {
+            logoutLink.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Ayrılıyor musun?',
+                    text: 'Seni tekrar görmek için sabırsızlanıyoruz!',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff7675',
+                    cancelButtonColor: '#6c5ce7',
+                    confirmButtonText: 'Evet, çıkış yap',
+                    cancelButtonText: 'Vazgeçtim',
+                    background: '#151521',
+                    color: '#e0e0e0',
+                    iconColor: '#ffdb58'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('settingsLogoutForm').submit();
+                    }
+                });
+            });
+        }
+    });
+</script>

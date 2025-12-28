@@ -1,0 +1,85 @@
+<section class="study-room">
+  <div class="study-room__container">
+    <div class="study-room__header">
+      <div>
+        <h1 class="study-room__title">Bugünkü Pomodorolar</h1>
+        <p class="study-room__subtitle">
+          Bugün kaydedilen oturumlar + toplam odak süren.
+        </p>
+      </div>
+
+      <div class="study-room__row">
+        <a class="btn-secondary" href="/study-room/personal">← Kişisel Oda</a>
+        <a class="btn-secondary" href="/study-room/community">Topluluk Oda</a>
+      </div>
+    </div>
+
+    <div class="study-room__grid">
+      <!-- Özet kartı -->
+      <div class="study-room__card">
+        <h2>Özet</h2>
+
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat__label">Toplam odak</div>
+            <div class="stat__value"><%= totalFocusMinutes %> dk</div>
+          </div>
+
+          <div class="stat">
+            <div class="stat__label">Toplam oturum</div>
+            <div class="stat__value"><%= (sessions || []).length %></div>
+          </div>
+        </div>
+
+        <p class="study-room__hint">
+          İpucu: “Odak/Özel” oturumları toplam odağa eklenir. Molalar ayrı
+          tutulur.
+        </p>
+      </div>
+
+      <!-- Liste kartı -->
+      <div class="study-room__card">
+        <h2>Oturumlar</h2>
+
+        <% if (!sessions || sessions.length === 0) { %>
+        <p class="study-room__hint">Bugün henüz kayıt yok. Bir tur başlat 🍅</p>
+        <% } else { %>
+        <div class="log-list">
+          <% sessions.forEach((s) => { const started = s.startedAt ? new
+          Date(s.startedAt) : null; const ended = s.endedAt ? new
+          Date(s.endedAt) : null; const fmt = (d) => d ?
+          d.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+          : "--:--"; const mode = s.mode || "work"; const status = s.status ||
+          "unknown"; const planned = Number(s.plannedMinutes || 0); const mins =
+          Math.round((Number(s.actualSeconds || 0)) / 60); const badgeText =
+          mode === "work" ? "🍅 Odak" : mode === "short" ? "☕ Kısa mola" : mode
+          === "long" ? "🌙 Uzun mola" : "✨ Özel"; %>
+
+          <div class="log-item">
+            <div class="log-item__left">
+              <div class="log-item__title">
+                <span class="badge"><%= badgeText %></span>
+                <span class="muted">•</span>
+                <span class="muted"><%= status %></span>
+              </div>
+
+              <div class="log-item__meta">
+                <span>Başlangıç: <strong><%= fmt(started) %></strong></span>
+                <span class="muted">→</span>
+                <span>Bitiş: <strong><%= fmt(ended) %></strong></span>
+              </div>
+            </div>
+
+            <div class="log-item__right">
+              <div class="log-item__mins"><%= mins %> dk</div>
+              <div class="muted"><%= planned %> dk plan</div>
+            </div>
+          </div>
+
+          <% }) %>
+        </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
