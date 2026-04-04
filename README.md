@@ -1,70 +1,104 @@
 # 🌱 Mindshire
 
-Mindshire, öğrenciler ve bireysel çalışanlar için geliştirilmiş,  
-**çalışma takibi, görev yönetimi ve odaklanma deneyimini bir araya getiren** web tabanlı bir üretkenlik uygulamasıdır.
+**Mindshire**, öğrenciler ve bireysel çalışanlar için geliştirilmiş web tabanlı bir üretkenlik uygulamasıdır.  
+Kullanıcıların çalışma süreçlerini planlamasını, takip etmesini ve odaklanmasını kolaylaştırmayı amaçlar.
 
-Proje; takvim, yapılacaklar listesi, istatistikler ve çalışma odaları gibi modüllerle  
-kullanıcının öğrenme sürecini daha **düzenli, görünür ve sürdürülebilir** hale getirmeyi amaçlar.
+Takvim, görev yönetimi, istatistikler ve çalışma odaları gibi modülleri tek bir platformda birleştirerek öğrenme sürecini daha **düzenli**, **ölçülebilir** ve **sürdürülebilir** hale getirir.
 
 ---
 
 ## ✨ Özellikler
 
-- 📅 **Takvim Yönetimi**
-  - Günlük etkinlik ekleme, güncelleme ve silme
-  - Takvim üzerinden çalışma planı oluşturma
+### 📅 Takvim Yönetimi
+- Günlük etkinlik ekleme, güncelleme ve silme
+- Takvim üzerinden çalışma planı oluşturma
 
-- ✅ **To-Do List**
-  - Gün bazlı görevler
-  - Tamamlanan / tamamlanmayan görev takibi
+### ✅ To-Do List
+- Gün bazlı görev oluşturma
+- Tamamlanan / tamamlanmayan görev takibi
 
-- 📊 **İstatistikler**
-  - Çalışma süresi ve görev tamamlama verileri
-  - Kullanıcının ilerlemesini görselleştirme
+### 📊 İstatistikler
+- Çalışma süresi analizi
+- Görev tamamlama oranları
+- Kullanıcı ilerlemesini görselleştirme
 
-- 👥 **Çalışma Odaları**
-  - Bireysel ve toplu çalışma odaları
-  - Pomodoro tabanlı odaklanma sistemi
+### 👥 Çalışma Odaları
+- Bireysel ve toplu çalışma alanları
+- Pomodoro tabanlı odaklanma sistemi
 
-- 👤 **Profil & Ayarlar**
-  - Avatar seçimi
-  - Hesap ve kullanıcı ayarları
-  - Hesap silme özelliği
+### 👤 Profil & Ayarlar
+- Avatar seçimi
+- Kullanıcı ayarları yönetimi
+- Hesap silme özelliği
 
 ---
 
 ## 🛠 Kullanılan Teknolojiler
 
-**Backend**
+### Backend
 - Node.js
 - Express.js
 - MongoDB (Mongoose)
 - MVC mimarisi
+- RESTful API
 
-**Frontend**
+### Frontend
 - EJS (Embedded JavaScript Templates)
 - HTML5
 - CSS3
 - Vanilla JavaScript
 
-**Diğer**
+### Diğer
 - Git & GitHub
 - CSRF Protection
-- RESTful Routing
+- Authentication & Authorization Middleware
 
 ---
 
 ## 📂 Proje Yapısı
 
-```text
+
 mindshire/
 │
-├── controllers/      # İş mantıkları
-├── models/           # Veritabanı modelleri
-├── routes/           # Express router yapısı
-├── views/            # EJS sayfaları
-│   └── pages/
-├── public/           # CSS, JS, görseller
-├── middlewares/      # Auth, CSRF vb.
-├── app.js
+├── controllers/ # İş mantıkları
+├── models/ # Veritabanı modelleri
+├── routes/ # Express router yapısı
+├── views/ # EJS template dosyaları
+│ └── pages/
+├── public/ # CSS, JS ve statik dosyalar
+├── middlewares/ # Auth, CSRF vb.
+├── app.js # Uygulama giriş noktası
 └── package.json
+
+
+---
+
+## 🚀 Kurulum ve Çalıştırma
+
+Projeyi локal ortamda çalıştırmak için aşağıdaki adımları izleyin:
+
+### 1️⃣ Repoyu klonlayın
+```bash
+git clone https://github.com/sengka/mindshire.git
+cd mindshire
+2️⃣ Bağımlılıkları yükleyin
+npm install
+3️⃣ Ortam değişkenlerini ayarlayın
+
+Proje kök dizininde .env dosyası oluşturun ve aşağıdaki değişkenleri ekleyin:
+
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+SESSION_SECRET=your_secret_key
+4️⃣ Uygulamayı başlatın
+npm start
+
+veya (development için):
+
+npm run dev
+5️⃣ Tarayıcıda açın
+http://localhost:3000
+📌 Geliştirme Notları
+Proje MVC mimarisi ile yapılandırılmıştır.
+Güvenlik için CSRF koruması uygulanmıştır.
+Modüler yapı sayesinde yeni özellikler kolayca eklenebilir.
