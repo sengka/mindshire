@@ -63,26 +63,36 @@ Projeyi lokal ortamda çalıştırmak için aşağıdaki adımları izleyin:
 ```bash
 git clone https://github.com/sengka/mindshire.git
 cd mindshire
-2️⃣ Bağımlılıkları yükleyin
+```
+
+### 2️⃣ Bağımlılıkları yükleyin
+```bash
 npm install
-3️⃣ Ortam değişkenlerini ayarlayın
+```
 
-Proje kök dizininde .env dosyası oluşturun ve aşağıdaki değişkenleri ekleyin:
+### 3️⃣ Ortam değişkenlerini ayarlayın
 
+Proje kök dizininde `.env` dosyası oluşturun ve aşağıdaki değişkenleri ekleyin:
+
+```env
 PORT=3000
 MONGO_URI=your_mongodb_connection_string
 SESSION_SECRET=your_secret_key
-4️⃣ Uygulamayı başlatın
+```
+
+### 4️⃣ Uygulamayı başlatın
+```bash
 npm start
+```
 
 veya geliştirme ortamı için:
-
+```bash
 npm run dev
-5️⃣ Tarayıcıda açın
+```
+
+### 5️⃣ Tarayıcıda açın
+```
 http://localhost:3000
-📌 Geliştirme Notları
-Proje MVC mimarisi ile yapılandırılmıştır.
-Güvenlik için CSRF koruması uygulanmıştır.
-Modüler yapı sayesinde yeni özellikler kolayca genişletilebilir.
+```
 Güvenlik için CSRF koruması uygulanmıştır.
 Modüler yapı sayesinde yeni özellikler kolayca eklenebilir.
