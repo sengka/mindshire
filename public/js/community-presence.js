@@ -71,6 +71,10 @@
       wrap.style.backgroundSize = "cover";
       wrap.style.backgroundPosition = "center";
 
+      // League border logic
+      const leagueClass = u.league ? `league-border-${u.league.toLowerCase()}` : "league-border-bronze";
+      wrap.classList.add(leagueClass);
+
       // Host distinction - Gold border
       if (isHost) {
         wrap.style.boxShadow = "0 0 0 2px #FFD700, 0 0 8px rgba(255, 215, 0, 0.5)"; // Gold ring + glow

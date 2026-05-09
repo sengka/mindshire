@@ -25,6 +25,7 @@ const pomodoroRouter = require("./routes/pomodoroRoutes");
 const statsRouter = require("./routes/statsRoutes");
 const profileRouter = require("./routes/profileRoutes");
 const settingsRouter = require("./routes/settingsRoutes");
+const spotifyRouter = require("./routes/spotifyRoutes");
 
 connectDB();
 
@@ -78,6 +79,7 @@ app.use("/pomodoro", pomodoroRouter);
 app.use("/", statsRouter);
 app.use("/", profileRouter);
 app.use("/", settingsRouter);
+app.use("/spotify", spotifyRouter);
 
 // --- CSRF Error Handler ---
 app.use((err, req, res, next) => {
@@ -113,11 +115,13 @@ const io = new Server(server);
 // ✅ Socket event handlers
 require("./sockets/presenceSocket")(io);
 require("./sockets/pomodoroSocket")(io);
+require("./sockets/chatSocket")(io);
+require("./sockets/webrtcSocket")(io);
 
 // --- Sunucuyu Başlat ---
 server.listen(PORT, () => {
   console.log(`
   🔮 Büyülü Evren Portalı Açıldı!
-  🌍 http://localhost:${PORT}
+  🌍 http://127.0.0.1:${PORT}
   `);
 });

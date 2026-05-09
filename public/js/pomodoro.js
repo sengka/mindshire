@@ -264,7 +264,7 @@
 
     try {
       const csrfToken = getCsrfToken();
-      await fetch("/pomodoro/stop", {
+      const r = await fetch("/pomodoro/stop", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -276,6 +276,29 @@
           _csrf: csrfToken
         })
       });
+
+      const data = await r.json().catch(() => null);
+      if (data && data.xpEarned > 0) {
+        // Show XP notification
+        if (typeof Swal !== "undefined") {
+            let html = `<h2 style="color: #ffdb58">+${data.xpEarned} XP</h2>`;
+            if (data.newLeague) {
+                html += `<p style="color: #00ffff; font-weight: bold; margin-top: 10px;">🌟 LİG ATLADIN: ${data.newLeague}!</p>`;
+            }
+            if (data.newBadges && data.newBadges.length > 0) {
+                const badgeNames = data.newBadges.map(b => b === 'night_owl' ? '🦉 Gece Kuşu' : (b === 'iron_will' ? '🛡️ Demir İrade' : (b === 'first_step' ? '🌱 İlk Adım' : b)));
+                html += `<p style="margin-top: 10px;">🎖️ Yeni Rozetler:<br>${badgeNames.join("<br>")}</p>`;
+            }
+            Swal.fire({
+                title: 'Tebrikler! 🎉',
+                html: html,
+                icon: 'success',
+                background: '#1a1a2e',
+                color: '#e0e0e0',
+                confirmButtonColor: '#6c5ce7'
+            });
+        }
+      }
     } catch (err) {
       console.error(err);
       setStatus("Tur kaydı kapatılamadı. (DB bağlantısını kontrol et)");

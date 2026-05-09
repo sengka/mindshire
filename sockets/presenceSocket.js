@@ -36,8 +36,11 @@ module.exports = function presenceSocket(io) {
         id: user?.id || socket.id,
         name: user?.name || "Misafir",
         avatarUrl: user?.avatarUrl || "/img/avatars/default.png",
+        league: user?.league || "Bronze",
         isHost: !!user?.isHost
       };
+
+      socket.data.user = safeUser;
 
       const usersMap = getRoomMap(roomId);
       usersMap.set(socket.id, safeUser);

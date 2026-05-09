@@ -35,7 +35,7 @@ async function requireUser(req) {
 
 exports.getStudyRoomIndex = async (req, res) => {
   const user = await requireUser(req);
-  if (!user) return res.redirect("/login");
+  if (!user) return res.redirect("/giris");
 
   res.render("pages/study-room/index", {
     layout: "layouts/main",
@@ -46,7 +46,7 @@ exports.getStudyRoomIndex = async (req, res) => {
 
 exports.getPersonalRoom = async (req, res) => {
   const user = await requireUser(req);
-  if (!user) return res.redirect("/login");
+  if (!user) return res.redirect("/giris");
 
   res.render("pages/study-room/personal", {
     layout: "layouts/main",
@@ -61,7 +61,7 @@ exports.getPersonalRoom = async (req, res) => {
 ================================ */
 exports.getCommunityLobby = async (req, res) => {
   const user = await requireUser(req);
-  if (!user) return res.redirect("/login");
+  if (!user) return res.redirect("/giris");
 
   const rooms = await StudyRoom.find({ status: "active" })
     .sort({ updatedAt: -1 })
@@ -86,7 +86,7 @@ exports.getCommunityLobby = async (req, res) => {
 
 exports.getCommunityRoomPage = async (req, res) => {
   const user = await requireUser(req);
-  if (!user) return res.redirect("/login");
+  if (!user) return res.redirect("/giris");
 
   const { roomId } = req.params; // route aynı kalsın diye roomId kullanıyorum
 
@@ -146,7 +146,7 @@ exports.getCommunityRoomPage = async (req, res) => {
 exports.createCommunityRoom = async (req, res) => {
   try {
     const user = await requireUser(req);
-    if (!user) return res.redirect("/login");
+    if (!user) return res.redirect("/giris");
 
     const {
       title,
@@ -190,7 +190,7 @@ exports.createCommunityRoom = async (req, res) => {
 exports.endCommunityRoom = async (req, res) => {
   try {
     const user = await requireUser(req);
-    if (!user) return res.redirect("/login");
+    if (!user) return res.redirect("/giris");
 
     const { roomId } = req.params;
 
@@ -216,7 +216,7 @@ exports.endCommunityRoom = async (req, res) => {
 exports.getPomodoroLogPage = async (req, res) => {
   try {
     const user = await requireUser(req);
-    if (!user) return res.redirect("/login");
+    if (!user) return res.redirect("/giris");
 
     const { start, end } = getTodayRange();
 

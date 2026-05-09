@@ -93,7 +93,45 @@ exports.stopSession = async (req, res) => {
 
     if (!doc) return res.status(404).json({ ok: false, message: "Kayıt bulunamadı" });
 
-    return res.json({ ok: true });
+    // --- GAMIFICATION LOGIC ---
+    let xpEarned = 0;
+    let newBadges = [];
+    let leagueUpgraded = false;
+    
+    if (newStatus === "completed" && (doc.mode === "work" || doc.mode === "custom")) {
+      const gamification = require("../utils/gamification");
+      const oldLeague = user.league;
+      
+      // Calculate XP (10 XP per minute)
+      const minutes = Math.floor(secNum / 60);
+      xpEarned = minutes * 10;
+      
+      if (xpEarned > 0) {
+          user.xp = (user.xp || 0) + xpEarned;
+          user.level = gamification.calculateLevel(user.xp);
+          user.league = gamification.calculateLeague(user.xp);
+          
+          if (user.league !== oldLeague) {
+              leagueUpgraded = true;
+          }
+
+          const earnedBadges = gamification.evaluateBadges(user, secNum, doc.endedAt);
+          if (earnedBadges.length > 0) {
+              user.badges = user.badges || [];
+              user.badges.push(...earnedBadges);
+              newBadges = earnedBadges;
+          }
+
+          await user.save();
+      }
+    }
+
+    return res.json({ 
+        ok: true,
+        xpEarned,
+        newBadges,
+        newLeague: leagueUpgraded ? user.league : null
+    });
   } catch (err) {
     console.error("stopSession error:", err);
     return res.status(500).json({ ok: false, message: "Server error" });

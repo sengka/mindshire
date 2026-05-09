@@ -79,14 +79,86 @@
 
       </div>
 
-      <!-- SAĞ: Katılımcılar -->
+      <!-- KAMERALAR (WebRTC) -->
       <div class="study-room__card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h2>📹 Kameralar</h2>
+          <button id="toggleCameraBtn" class="btn-secondary" style="font-size: 0.8rem; padding: 4px 8px;">Kamerayı Aç</button>
+        </div>
+        
+        <div class="video-grid" id="videoGrid" style="display: flex; flex-wrap: wrap; gap: 10px; min-height: 20px;">
+          <!-- Local video and remote videos will go here -->
+          <p class="study-room__hint" id="noVideoHint" style="margin: auto;">Şu an kamerasını açan kimse yok.</p>
+        </div>
+      </div>
+
+      <!-- SAĞ: Katılımcılar -->
+      <div class="study-room__card" style="margin-top: 16px;">
         <h2>Katılımcılar</h2>
 
         <div class="avatar-list" id="avatarList">
           <!-- User avatars will be rendered here via socket -->
         </div>
 
+      </div>
+
+      <!-- YENİ: SOHBET (CHAT) PANELİ -->
+      <div class="study-room__card" style="margin-top: 16px">
+        <h2>💬 Canlı Sohbet</h2>
+        <div class="chat-container" id="chatContainer" style="height: 250px; overflow-y: auto; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 8px;">
+          <p class="study-room__hint" style="text-align: center; margin: auto;">Sohbete hoş geldiniz!</p>
+        </div>
+        <form id="chatForm" style="display: flex; gap: 8px;">
+          <input type="text" id="chatInput" class="study-room__input" placeholder="Mesajınızı yazın..." style="flex: 1;" maxlength="200" autocomplete="off" required>
+          <button type="submit" class="btn-primary">Gönder</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- MÜZİK VE ODAK PANELİ -->
+    <div class="study-room__card" style="margin-top: 16px">
+      <h2>🎵 Müzik & Odak</h2>
+      
+      <div class="tabs" style="display: flex; gap: 10px; margin-bottom: 10px;">
+        <button id="tabAmbient" class="btn-primary" style="flex: 1;">🌧️ Ambiyans</button>
+        <button id="tabSpotify" class="btn-secondary" style="flex: 1;">🎧 Spotify</button>
+      </div>
+
+      <!-- AMBIENT TAB -->
+      <div id="contentAmbient">
+        <p class="study-room__hint">Arka plan sesleri ile odaklan.</p>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button class="btn-secondary ambient-btn" data-src="https://cdn.pixabay.com/download/audio/2021/08/04/audio_0625c1539c.mp3?filename=heavy-rain-nature-sounds-8186.mp3" style="flex: 1;">🌧️ Yağmur</button>
+          <button class="btn-secondary ambient-btn" data-src="https://cdn.pixabay.com/download/audio/2021/09/06/audio_2491a92e1d.mp3?filename=birds-in-the-forest-107050.mp3" style="flex: 1;">🌲 Orman</button>
+          <button class="btn-secondary ambient-btn" data-src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2ba7ba70a6.mp3?filename=cafe-ambience-110294.mp3" style="flex: 1;">☕ Kafe</button>
+        </div>
+        <div style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
+          <span>🔊</span>
+          <input type="range" id="ambientVolume" min="0" max="1" step="0.05" value="0.5" style="flex: 1;">
+          <button id="ambientStop" class="badge" style="cursor: pointer;">Durdur</button>
+        </div>
+        <audio id="ambientPlayer" loop></audio>
+      </div>
+
+      <!-- SPOTIFY TAB -->
+      <div id="contentSpotify" style="display: none;">
+        <div id="spotifyConnectDiv" style="text-align: center; padding: 15px;">
+          <p class="study-room__hint">Kendi çalma listelerini dinlemek için Spotify'ı bağla.</p>
+          <a href="/spotify/login" class="btn-primary" style="display: inline-block; background-color: #1DB954; color: white; border: none; margin-top: 10px;">🟢 Spotify'a Bağlan</a>
+        </div>
+        
+        <div id="spotifyPlayerDiv" style="display: none;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <select id="spotifyPlaylists" class="study-room__input" style="flex: 1; margin-right: 10px;">
+              <option value="">Çalma listesi seç...</option>
+            </select>
+            <a href="/spotify/logout" class="badge" style="text-decoration: none; cursor: pointer;">Çıkış</a>
+          </div>
+          
+          <div id="spotifyIframeContainer" style="width: 100%; height: 152px; background: rgba(0,0,0,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+            <p class="study-room__hint" style="margin: auto;">Listeden bir müzik seçin</p>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -243,6 +315,7 @@
             id: "<%= user._id %>",
             name: "<%= (user.username || user.name || 'Kullanıcı').replace(/\"/g,'') %>",
             avatarUrl: "<%= user.avatar || '/img/avatars/default.png' %>",
+            league: "<%= user.league || 'Bronze' %>",
             isHost: <%= isHost? 'true': 'false' %>
               };
         </script>
@@ -271,5 +344,9 @@
         <script src="/js/community-settings.js"></script>
         <script src="/js/community-announcement.js"></script>
         <script src="/js/pomodoro.js"></script>
+        <script src="/js/community-chat.js"></script>
+        <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
+        <script src="/js/community-webrtc.js"></script>
+        <script src="/js/community-audio.js"></script>
   </div>
 </section>

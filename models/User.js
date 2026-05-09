@@ -26,6 +26,15 @@ const userSchema = new mongoose.Schema({
         type: Number, 
         default: 1 
     },
+    league: {
+        type: String,
+        enum: ['Bronze', 'Silver', 'Gold', 'Diamond', 'Legend'],
+        default: 'Bronze'
+    },
+    badges: {
+        type: [String],
+        default: []
+    },
     unlockedThemes: { 
         type: [String], 
         default: ['default'] // Başlangıç teması

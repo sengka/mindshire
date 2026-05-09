@@ -4,14 +4,13 @@
     <!-- PROFILE HEADER -->
     <section class="profile-hero">
         <div class="profile-header-content">
-            <div class="profile-avatar-large">
+            <div class="profile-avatar-large league-border-<%= user.league ? user.league.toLowerCase() : 'bronze' %>">
                 <img src="<%= user.avatar %>" alt="<%= user.username %>" id="currentAvatarDisplay">
             </div>
             <div class="profile-info">
                 <h1 class="profile-username">
                     <%= user.username %>
                 </h1>
-                <div class="profile-stats-row">
                     <div class="profile-stat">
                         <span class="stat-label">Level</span>
                         <span class="stat-value">
@@ -21,15 +20,33 @@
                     <div class="profile-stat">
                         <span class="stat-label">XP</span>
                         <span class="stat-value">
-                            <%= user.stats.xp %> / <%= user.stats.xpMax %>
+                            <%= user.stats.xp %>
                         </span>
                     </div>
                     <div class="profile-stat">
-                        <span class="stat-label">Katılma Tarihi</span>
-                        <span class="stat-value">
-                            <%= joinDate %>
+                        <span class="stat-label">Lig</span>
+                        <span class="stat-value league-text <%= user.league ? user.league.toLowerCase() : 'bronze' %>">
+                            <%= user.league || 'Bronze' %>
                         </span>
                     </div>
+                </div>
+                
+                <div class="badges-row" style="margin-top: 1.5rem; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <% if (user.badges && user.badges.length > 0) { %>
+                        <% user.badges.forEach(badge => { %>
+                            <% if (badge === 'night_owl') { %>
+                                <div class="badge-item" title="Gece Kuşu: Gece yarısı ile sabah 5 arası tamamlandı">🦉 Gece Kuşu</div>
+                            <% } else if (badge === 'iron_will') { %>
+                                <div class="badge-item" title="Demir İrade: 60+ dakika aralıksız çalışma">🛡️ Demir İrade</div>
+                            <% } else if (badge === 'first_step') { %>
+                                <div class="badge-item" title="İlk Adım: İlk pomodoro tamamlandı">🌱 İlk Adım</div>
+                            <% } else { %>
+                                <div class="badge-item">🏅 <%= badge %></div>
+                            <% } %>
+                        <% }) %>
+                    <% } else { %>
+                        <span style="color:#a0a0a0; font-size: 0.9rem;">Henüz bir rozet kazanmadın. Hemen çalışmaya başla!</span>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -83,8 +100,45 @@
         height: 150px;
         border-radius: 50%;
         overflow: hidden;
-        border: 4px solid #ffdb58;
-        box-shadow: 0 8px 32px rgba(255, 219, 88, 0.3);
+        border: 4px solid #fff;
+        box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s;
+    }
+    
+    .league-border-bronze {
+        border-color: #cd7f32;
+        box-shadow: 0 8px 32px rgba(205, 127, 50, 0.4);
+    }
+    .league-border-silver {
+        border-color: #c0c0c0;
+        box-shadow: 0 8px 32px rgba(192, 192, 192, 0.4);
+    }
+    .league-border-gold {
+        border-color: #ffd700;
+        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
+    }
+    .league-border-diamond {
+        border-color: #00ffff;
+        box-shadow: 0 8px 32px rgba(0, 255, 255, 0.6);
+    }
+    .league-border-legend {
+        border-color: #ff4500;
+        box-shadow: 0 8px 32px rgba(255, 69, 0, 0.8);
+    }
+    
+    .league-text.bronze { color: #cd7f32; }
+    .league-text.silver { color: #c0c0c0; }
+    .league-text.gold { color: #ffd700; }
+    .league-text.diamond { color: #00ffff; text-shadow: 0 0 8px rgba(0,255,255,0.4); }
+    .league-text.legend { color: #ff4500; text-shadow: 0 0 10px rgba(255,69,0,0.6); }
+
+    .badge-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     .profile-avatar-large img {
